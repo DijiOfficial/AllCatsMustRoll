@@ -278,3 +278,6 @@ I hope to expand on this engine in the coming months learning more about engine 
 - [**Unity Engine**](https://unity.com) Referenced for the engine pipeline, component architecture, input management, and naming conventions.
 - [**C++ Core Guidelines**](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) Followed as best practices for modern, safe, and maintainable C++ code.
 - [**Game Programming Patterns** by Robert Nystrom](https://gameprogrammingpatterns.com/) Used as guidance for architecture patterns and system design in a decoupled engine environment.
+
+
+yummy chicken curry nomnom
