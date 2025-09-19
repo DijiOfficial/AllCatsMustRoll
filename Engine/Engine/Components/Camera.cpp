@@ -11,7 +11,24 @@ diji::Camera::Camera(GameObject* ownerPtr, const float width, const float height
     , m_Height{ height }
     , m_IsLocked{ false }
 {
-    m_CameraView = sf::View(sf::Vector2f{ 0, 0 }, sf::Vector2f{ width, height });
+    m_CameraView = sf::View(sf::Vector2f{ width * 0.5f, height * 0.5f }, sf::Vector2f{ width, height });
+}
+
+diji::Camera::Camera(GameObject* ownerPtr, const sf::Vector2f size)
+    : Component(ownerPtr)
+    , m_LevelBoundaries{ sf::Vector2f{ 0, 0 }, size }
+    , m_CameraOffset{ 0, 0 }
+    , m_Width{ size.x }
+    , m_Height{ size.y }
+    , m_IsLocked{ false }
+{
+    m_CameraView = sf::View(sf::Vector2f{ size.x * 0.5f, size.y * 0.5f }, size);
+}
+
+diji::Camera::Camera(GameObject* ownerPtr, const sf::Vector2u size)
+    : Camera(ownerPtr, static_cast<sf::Vector2f>(size))
+{
+    
 }
 
 void diji::Camera::Init()
@@ -25,7 +42,10 @@ void diji::Camera::Update()
     if (m_IsLocked) return;
 
     sf::Vector2f cameraPos = m_TransformCompPtr->GetPosition() + m_CameraOffset;
-    Clamp(cameraPos);
+
+    if (m_IsClamped)
+        Clamp(cameraPos);
+    
     m_CameraView.setCenter(cameraPos);
     window::g_window_ptr->setView(m_CameraView); // big L from SFML imo
 }
@@ -43,6 +63,11 @@ void diji::Camera::SetFollowSelf()
 void diji::Camera::SetAsMainView() const
 {
     window::g_window_ptr->setView(m_CameraView);
+}
+
+void diji::Camera::ClearFollow()
+{
+    m_TransformCompPtr = GetOwner()->GetComponent<Transform>();
 }
 
 sf::Vector2i diji::Camera::GetMouseWorldPosition(const sf::Vector2i& pos) const

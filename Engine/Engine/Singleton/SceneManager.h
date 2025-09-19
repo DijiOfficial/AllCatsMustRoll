@@ -36,9 +36,13 @@ namespace diji
         [[nodiscard]] GameObject* GetGameObject(const std::string& name) const;
         [[nodiscard]] std::string GetGameObjectName(const GameObject* object) const;
         GameObject* SpawnGameObject(const std::string& name, const GameObject* original, const sf::Vector2f& spawnLocation) const;
-
+        void ChangePlayerViewCenter(int currPlayer, const sf::Vector2f& newCenter) const;
+        void SetViewParameters(int idx, const Transform* target, bool isFollowing = false, const sf::Vector2f& offset = {}) const;
+        
         using SceneLoaderFunc = std::function<void()>;
         void RegisterScene(const int id, SceneLoaderFunc loader) { m_SceneLoaders[id] = std::move(loader); }
+
+        void SetMultiplayerSplitScreen(int numPlayers);
         
     private:
         // todo: replace int with SceneId enum class??
@@ -50,5 +54,7 @@ namespace diji
         int m_NextScene = 0;
         bool m_IsSceneChange = false;
         bool m_HasPendingDestroy = false;
+        bool m_IsMultiplayer = false;
+        int m_NumPlayers = 0;
     };
 }

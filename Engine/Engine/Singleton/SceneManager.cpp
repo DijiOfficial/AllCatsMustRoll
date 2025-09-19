@@ -1,9 +1,12 @@
 ﻿#include "SceneManager.h"
 
+#include <ranges>
 #include <stdexcept>
 
 #include "TimerManager.h"
+#include "../Collision/CollisionSingleton.h"
 #include "../Components/Transform.h"
+#include "../Input/InputManager.h"
 
 diji::Scene* diji::SceneManager::CreateScene(const int id)
 {
@@ -17,6 +20,11 @@ diji::Scene* diji::SceneManager::CreateScene(const int id)
 
     // Scene does not exist, create a new one and store it in the map
     m_ScenesUPtrMap[id] = std::make_unique<Scene>();
+
+    // if multiplayer is enabled, set the new scene to use split screen
+    if (m_IsMultiplayer)
+        m_ScenesUPtrMap[id].get()->SetMultiplayerSplitScreen(m_NumPlayers);
+    
     return m_ScenesUPtrMap[id].get();
 }
 
@@ -68,7 +76,7 @@ void diji::SceneManager::EndFrameUpdate()
             m_ScenesUPtrMap.at(m_ActiveSceneId)->Remove(gameObject);
         }
 
-        m_PendingDestroyVec.clear();
+        m_PendingDestroyVec = std::vector<const GameObject*>();
         m_HasPendingDestroy = false;
     }
     
@@ -76,6 +84,15 @@ void diji::SceneManager::EndFrameUpdate()
     if (m_IsSceneChange) // todo: async new scene loading
     {
         m_IsSceneChange = false;
+
+        // Clear Commands assigned for that scene
+        InputManager::GetInstance().ResetCommands();
+
+        // Clear All Colliders
+        CollisionSingleton::GetInstance().Reset();
+
+        // Clear all timers
+        TimerManager::GetInstance().ClearAllTimers();
         
         // Destroy current scene
         OnDestroy();
@@ -120,4 +137,32 @@ diji::GameObject* diji::SceneManager::SpawnGameObject(const std::string& name, c
     gameObject->Start();
 
     return gameObject;
+}
+
+void diji::SceneManager::ChangePlayerViewCenter(const int currPlayer, const sf::Vector2f& newCenter) const
+{
+    m_ScenesUPtrMap.at(m_ActiveSceneId)->ChangeViewCenter(currPlayer, newCenter);
+}
+
+void diji::SceneManager::SetViewParameters(const int idx, const Transform* target, const bool isFollowing, const sf::Vector2f& offset) const
+{
+    for (const auto& scene : m_ScenesUPtrMap | std::views::values)
+    {
+        scene->SetViewParameters(idx, target, isFollowing, offset);
+    }
+}
+
+void diji::SceneManager::SetMultiplayerSplitScreen(const int numPlayers)
+{
+    m_IsMultiplayer = true;
+    m_NumPlayers = numPlayers;
+
+    if (numPlayers == 1)
+        m_IsMultiplayer = false;
+
+    // update all existing scenes to use split screen
+    for (const auto& scene : m_ScenesUPtrMap | std::views::values)
+    {
+        scene->SetMultiplayerSplitScreen(numPlayers);
+    }
 }

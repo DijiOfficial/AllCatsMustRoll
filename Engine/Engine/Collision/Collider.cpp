@@ -31,6 +31,12 @@ diji::Collider::Collider(GameObject* ownerPtr, const int width, const int height
     m_CollisionBox = { .left = 0, .bottom = 0, .width = static_cast<float>(width), .height = static_cast<float>(height) };
 }
 
+diji::Collider::Collider(GameObject* ownerPtr, const Rectf& rect)
+    : Component(ownerPtr)
+    , m_CollisionBox{ rect }
+{
+}
+
 void diji::Collider::Start()
 {
     m_TransformCompPtr = GetOwner()->GetComponent<Transform>();
@@ -52,11 +58,12 @@ void diji::Collider::Start()
     CollisionSingleton::GetInstance().AddCollider(this, m_CollisionBox);
 }
 
+// todo: this should be late update and check for world collision it;s shit right now
 void diji::Collider::Update() // todo: not a fan, consider updating position when necessary rather than every frame, using dirty flag or other
 {
     m_LastState = m_CollisionBox;
     const auto& pos = m_TransformCompPtr->GetPosition();
-    if ((std::is_eq( pos.x <=> m_CollisionBox.left) and std::is_eq(pos.y <=> m_CollisionBox.bottom)) or m_IsOffsetSet)
+    if (std::is_eq( pos.x <=> m_CollisionBox.left) and std::is_eq(pos.y <=> m_CollisionBox.bottom))
         return;
 
     m_CollisionBox.left = pos.x + m_Offset.x;
@@ -89,4 +96,9 @@ void diji::Collider::UpdateColliderFromTexture()
 sf::Vector2f diji::Collider::GetPosition() const
 {
     return sf::Vector2f{ m_CollisionBox.left, m_CollisionBox.bottom };
+}
+
+sf::Vector2f diji::Collider::GetCenter() const
+{
+    return sf::Vector2f{ m_CollisionBox.left + m_CollisionBox.width * 0.5f, m_CollisionBox.bottom + m_CollisionBox.height * 0.5f };
 }

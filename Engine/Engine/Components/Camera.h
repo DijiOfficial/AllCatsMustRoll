@@ -13,6 +13,8 @@ namespace diji
     {
     public:
         explicit Camera(GameObject* ownerPtr, float width, float height);
+        explicit Camera(GameObject* ownerPtr, sf::Vector2f size);
+        explicit Camera(GameObject* ownerPtr, sf::Vector2u size);
         ~Camera() noexcept override = default;
 
         void Init() override;
@@ -30,15 +32,18 @@ namespace diji
         void UnlockCamera() { m_IsLocked = false; }
         void LockCamera() { m_IsLocked = true; }
         void SetOffsetCamera(const sf::Vector2f& offset) { m_CameraOffset = offset; }
+        void AddOffsetCamera(const sf::Vector2f& offset) { m_CameraOffset += offset; }
         void ResetOffset() { m_CameraOffset = sf::Vector2f{ 0, 0 }; }
         void SetFollow(const GameObject* target);
         void SetFollowSelf();
         void SetAsMainView() const;
+        void SetClampingMode(const bool isClamped) { m_IsClamped = isClamped; }
+        void ClearFollow();
         
         sf::Vector2f GetCameraOffset() const { return m_CameraOffset; }
         bool GetIsCameraLocked() const { return m_IsLocked; }
         sf::Vector2i GetMouseWorldPosition(const sf::Vector2i& pos) const;
-        // Rectf GetCameraView(const Rectf& target) const {return }???
+        const sf::View& GetCameraView() const { return m_CameraView; }
         
     private:
         Transform* m_TransformCompPtr = nullptr;
@@ -48,6 +53,7 @@ namespace diji
         float m_Width;
         float m_Height;
         bool m_IsLocked;
+        bool m_IsClamped = true;
 
         void Clamp(sf::Vector2f& pos) const;
     };

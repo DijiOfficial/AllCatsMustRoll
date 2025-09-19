@@ -17,7 +17,7 @@
 diji::Engine::Engine(const std::string& dataPath, const std::string& title, const bool useScreenResolution)
 {
 	window::VIEWPORT = useScreenResolution ? sf::VideoMode::getDesktopMode().size : sf::Vector2u{ 1920, 1080 };
-	window::g_window_ptr = std::make_unique<sf::RenderWindow>(sf::VideoMode(window::VIEWPORT), title, sf::Style::Default, sf::State::Fullscreen);
+	window::g_window_ptr = std::make_unique<sf::RenderWindow>(sf::VideoMode(window::VIEWPORT), title, sf::Style::Default, sf::State::Windowed);
 
 	if (window::g_window_ptr == nullptr)
 	{
@@ -47,6 +47,8 @@ void diji::Engine::Run(const std::function<void()>& load) const
 	sceneManager.Init();
 	sceneManager.Start();
 
+	TimeSingleton::GetInstance().SetFixedUpdateDeltaTime(FIXED_TIME_STEP);
+	
 	while (window::g_window_ptr->isOpen())
 	{
 		const auto currentTime{ std::chrono::high_resolution_clock::now() };
@@ -66,7 +68,7 @@ void diji::Engine::Run(const std::function<void()>& load) const
 
 		while (lag >= FIXED_TIME_STEP)
 		{
-			sceneManager.FixedUpdate();
+			sceneManager.FixedUpdate(); // todo: pass down fixed time step instead of getting it from the singleton
 			lag -= FIXED_TIME_STEP;
 		}
 
