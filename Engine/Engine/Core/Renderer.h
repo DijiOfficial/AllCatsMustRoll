@@ -3,6 +3,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include "../Singleton/Singleton.h"
+#include <SFML/Graphics/CircleShape.hpp>
 
 namespace sf
 {
@@ -57,6 +58,10 @@ namespace diji
 		void DrawRect(const sf::RectangleShape& shape, const sf::Color& outline, const sf::Color& fill, float outlineWidth = 1.f) const;
 		void DrawRect(const sf::RectangleShape& shape) const;
 		void DrawFilledRect(const sf::RectangleShape& shape, const sf::Color& color) const;
+
+		void DrawCirc(const sf::CircleShape& shape, const sf::Color& outline, const sf::Color& fill, float outlineWidth = 1.f) const;
+		void DrawCirc(const sf::CircleShape& shape) const;
+		void DrawFilledCirc(const sf::CircleShape& shape, const sf::Color& color) const;
 		
 		
 		// void DrawLine(const glm::vec2& p1, const glm::vec2& p2, const SDL_Color& color = { 255, 255, 255, 255 }) const

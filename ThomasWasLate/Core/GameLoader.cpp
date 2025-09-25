@@ -15,6 +15,7 @@
 #include "Engine/Components/Render.h"
 #include "Engine/Components/Camera.h"
 #include "Engine/Components/RectRender.h"
+#include "Engine/Components/CircRender.h"
 #include "Engine/Components/Sprite.h"
 #include "Engine/Components/TextComp.h"
 #include "Engine/Core/Engine.h"
@@ -77,6 +78,15 @@ void SceneLoader::Level()
     bob->AddComponents<Collider>(44, 35, sf::Vector2f{ 3.f, 15.f });
     bob->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Bob, 0.25f);
     bob->AddComponents<RectRender>(true);
+
+    const auto jim = scene->CreateGameObject("X_Jim");
+    jim->AddComponents<Transform>(200, 0);
+    jim->AddComponents<TextureComp>("graphics/jim.png");
+    jim->AddComponents<Render>();
+    jim->AddComponents<Collider>(44, 35, sf::Vector2f{ 3.f, 15.f });
+    jim->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Jim, 0.25f);
+    jim->AddComponents<CircRender>(true);
+
     
 #pragma region Commands
     auto& input = InputManager::GetInstance();

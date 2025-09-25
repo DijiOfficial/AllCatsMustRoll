@@ -130,10 +130,27 @@ void diji::Renderer::DrawRect(const sf::RectangleShape& shape) const
 	DrawRect(shape, sf::Color::White ,sf::Color::Transparent);
 }
 
-void diji::Renderer::DrawFilledRect(const sf::RectangleShape& shape, const sf::Color& color) const
+//Draw circle shape functions
+void diji::Renderer::DrawCirc(const sf::CircleShape& shape, const sf::Color& outline, const sf::Color& fill, const float outlineWidth) const
 {
-	DrawRect(shape, color, color, 0);
+	sf::CircleShape circ = shape;
+	circ.setFillColor(fill);
+	circ.setOutlineColor(outline);
+	circ.setOutlineThickness(outlineWidth);
+
+	m_WindowPtr->draw(circ);
 }
+
+void diji::Renderer::DrawCirc(const sf::CircleShape& shape) const
+{
+	DrawCirc(shape, sf::Color::White, sf::Color::Transparent);
+}
+
+void diji::Renderer::DrawFilledCirc(const sf::CircleShape& shape, const sf::Color& color) const
+{
+	DrawCirc(shape, color, color, 0);
+}
+
 
 void diji::Renderer::SetBackgroundColor(const sf::Color& color)
 {

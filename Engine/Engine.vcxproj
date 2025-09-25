@@ -22,6 +22,7 @@
     <ClInclude Include="Engine\Collision\Collider.h" />
     <ClInclude Include="Engine\Collision\CollisionSingleton.h" />
     <ClInclude Include="Engine\Components\Camera.h" />
+    <ClInclude Include="Engine\Components\CircRender.h" />
     <ClInclude Include="Engine\Components\Component.h" />
     <ClInclude Include="Engine\Components\FPSCounter.h" />
     <ClInclude Include="Engine\Components\RectRender.h" />
@@ -55,6 +56,7 @@
     <ClCompile Include="Engine\Collision\Collider.cpp" />
     <ClCompile Include="Engine\Collision\CollisionSingleton.cpp" />
     <ClCompile Include="Engine\Components\Camera.cpp" />
+    <ClCompile Include="Engine\Components\CircRender.cpp" />
     <ClCompile Include="Engine\Components\FPSCounter.cpp" />
     <ClCompile Include="Engine\Components\RectRender.cpp" />
     <ClCompile Include="Engine\Components\Render.cpp" />
