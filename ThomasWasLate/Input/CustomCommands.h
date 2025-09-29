@@ -5,7 +5,7 @@ namespace thomasWasLate
 {
     class PlayerCharacter;
 
-    class SwitchSplitScreenView final : public diji::GameActorCommands
+    /*class SwitchSplitScreenView final : public diji::GameActorCommands
     {
     public:
         explicit SwitchSplitScreenView(diji::GameObject* actor, PlayerCharacter* thomas, PlayerCharacter* bob);
@@ -15,9 +15,9 @@ namespace thomasWasLate
         
     private :
         bool m_IsMultiplayer = false;
-        PlayerCharacter* m_Thomas = nullptr;
+       PlayerCharacter* m_Thomas = nullptr;
         PlayerCharacter* m_Bob = nullptr;
-    };
+    };*/
 
     class MoveCharacter final : public diji::GameActorCommands
     {
@@ -32,11 +32,11 @@ namespace thomasWasLate
         PlayerCharacter* m_Character = nullptr;
     };
 
-    class SwitchCharacter final : public diji::GameActorCommands
+    /*class SwitchCharacter final : public diji::GameActorCommands
     {
     public:
-        explicit SwitchCharacter(diji::GameObject* actor) : GameActorCommands{ actor } {}
-        ~SwitchCharacter() noexcept override = default;
+       explicit SwitchCharacter(diji::GameObject* actor) : GameActorCommands{ actor } {}
+        f~SwitchCharacter() noexcept override = default;
 
         void Execute() override;
     };
@@ -52,5 +52,19 @@ namespace thomasWasLate
     private:
         PlayerCharacter* m_Character = nullptr;
         bool m_IsJumping = false;
+    };*/
+
+    //Class for rotating character
+    class RotateCharacter final : public diji::GameActorCommands
+    {
+    public:
+        explicit RotateCharacter(diji::GameObject* actor, const sf::Vector2f& direction);
+        ~RotateCharacter() noexcept override = default;
+
+        void Execute() override;
+
+    private:
+        const sf::Vector2f m_Direction;
+        PlayerCharacter* m_Character = nullptr;
     };
 }

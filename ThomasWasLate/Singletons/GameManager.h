@@ -34,7 +34,7 @@ namespace thomasWasLate
     
     private:
         std::vector<std::unique_ptr<diji::Collider>> m_TileColliders;
-        CurrentPlayer m_CurrentPlayer = CurrentPlayer::Thomas;
+        CurrentPlayer m_CurrentPlayer = CurrentPlayer::Jim;
         sf::Vector2u m_StartPosition;
         std::vector<int> m_LevelInfo;
         int m_CurrentLevel = 1;

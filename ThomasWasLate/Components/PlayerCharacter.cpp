@@ -41,7 +41,7 @@ void thomasWasLate::PlayerCharacter::Update()
     newCollisionBox.bottom += GRAVITY * diji::TimeSingleton::GetInstance().GetDeltaTime() + m_ColliderCompPtr->GetOffset().y;
     
     bool isLevelDone = false;
-    bool isPlayerColliding = false;
+    
     const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(m_ColliderCompPtr, newCollisionBox);
     for (const auto& collider : colliders)
     {
@@ -51,18 +51,19 @@ void thomasWasLate::PlayerCharacter::Update()
             if (collider->GetTag() == "goal")
             {
                 isLevelDone = true;
+                break;
             }
-            continue;
+            
         }
 
-        // player collision
+        /*// player collision
         if (collider->GetParent()->HasComponent<PlayerCharacter>())
         {
             isPlayerColliding = true;
-        }
+        }*/
     }
 
-    if (isLevelDone && isPlayerColliding)
+    if (isLevelDone)
     {
         GameManager::GetInstance().SetLevelCleared();
     }

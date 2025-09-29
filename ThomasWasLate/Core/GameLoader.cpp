@@ -63,22 +63,23 @@ void SceneLoader::Level()
     // camera->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));
     camera->GetComponent<Camera>()->SetClampingMode(false);
 
-    const auto thomas = scene->CreateGameObject("X_Thomas");
+    /*const auto thomas = scene->CreateGameObject("X_Thomas");
     thomas->AddComponents<Transform>(0, 0);
     thomas->AddComponents<TextureComp>("graphics/thomas.png");
     thomas->AddComponents<Render>();
     thomas->AddComponents<Collider>(44, 70, sf::Vector2f{ 3.f, 30.f });
     thomas->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Thomas, 0.45f);
-    thomas->AddComponents<RectRender>(true);
+    thomas->AddComponents<RectRender>(true);*/
 
-    const auto bob = scene->CreateGameObject("X_Bob");
+    /*const auto bob = scene->CreateGameObject("X_Bob");
     bob->AddComponents<Transform>(100, 0);
     bob->AddComponents<TextureComp>("graphics/bob.png");
     bob->AddComponents<Render>();
     bob->AddComponents<Collider>(44, 35, sf::Vector2f{ 3.f, 15.f });
     bob->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Bob, 0.25f);
-    bob->AddComponents<RectRender>(true);
+    bob->AddComponents<RectRender>(true);*/
 
+    // Create Jim CircleShape
     const auto jim = scene->CreateGameObject("X_Jim");
     jim->AddComponents<Transform>(200, 0);
     jim->AddComponents<TextureComp>("graphics/jim.png");
@@ -91,7 +92,7 @@ void SceneLoader::Level()
 #pragma region Commands
     auto& input = InputManager::GetInstance();
 
-    input.BindCommand<thomasWasLate::SwitchSplitScreenView>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::E, nullptr, thomas->GetComponent<thomasWasLate::PlayerCharacter>(), bob->GetComponent<thomasWasLate::PlayerCharacter>());
+    /*input.BindCommand<thomasWasLate::SwitchSplitScreenView>(PlayerIdx::KEYBOARD, KeyState::PRESSED, sf::Keyboard::Scancode::E, nullptr, thomas->GetComponent<thomasWasLate::PlayerCharacter>(), bob->GetComponent<thomasWasLate::PlayerCharacter>());
     input.BindCommand<thomasWasLate::MoveCharacter>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::D, thomas, sf::Vector2f{ 1.f, 0.f });
     input.BindCommand<thomasWasLate::MoveCharacter>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::A, thomas, sf::Vector2f{ -1.f, 0.f });
     input.BindCommand<thomasWasLate::MoveCharacter>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::Right, bob, sf::Vector2f{ 1.f, 0.f });
@@ -102,8 +103,12 @@ void SceneLoader::Level()
     input.BindCommand<thomasWasLate::CharacterJump>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::W, thomas, true);
     input.BindCommand<thomasWasLate::CharacterJump>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Keyboard::Scancode::W, thomas, false);
     input.BindCommand<thomasWasLate::CharacterJump>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::Up, bob, true);
-    input.BindCommand<thomasWasLate::CharacterJump>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Keyboard::Scancode::Up, bob, false);
+    input.BindCommand<thomasWasLate::CharacterJump>(PlayerIdx::KEYBOARD, KeyState::RELEASED, sf::Keyboard::Scancode::Up, bob, false);*/
+
+    //Give input to Jim CircleShape (only left and right movement)
+    input.BindCommand<thomasWasLate::MoveCharacter>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::D, jim, sf::Vector2f{ 1.f, 0.f });
     
+    input.BindCommand<thomasWasLate::MoveCharacter>(PlayerIdx::KEYBOARD, KeyState::HELD, sf::Keyboard::Scancode::A, jim, sf::Vector2f{ -1.f, 0.f });
     
 #pragma endregion
 
