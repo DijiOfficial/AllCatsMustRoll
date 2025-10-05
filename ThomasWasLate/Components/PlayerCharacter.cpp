@@ -4,6 +4,7 @@
 #include "../Singletons/GameManager.h"
 #include "Engine/Components/Camera.h"
 #include "Engine/Components/Transform.h"
+#include "Engine/Interfaces/ISoundSystem.h"
 
 //temp
 // #include "../Core/GameLoader.h"
@@ -50,6 +51,19 @@ void thomasWasLate::PlayerCharacter::Update()
         {
             if (collider->GetTag() == "goal")
             {
+                
+                
+                //Get dat sound system interface
+                diji::ISoundSystem& soundSystem = diji::ServiceLocator::GetSoundSystem();
+
+                //Make those sound effect parameters
+                const std::string audioFile = "sound/finishlevelnya.wav"; //Location of file
+                const bool isMusic = false; // Its a sound effect so its false
+                const int volume = 125;      // 0-100 volume
+
+                //Send a request to play dat sound
+                soundSystem.AddSoundRequest(audioFile, isMusic, volume);
+                
                 isLevelDone = true;
                 break;
             }
@@ -96,6 +110,14 @@ void thomasWasLate::PlayerCharacter::FixedUpdate()
     const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(m_ColliderCompPtr, newCollisionBox);
     for (const auto& collider : colliders)
     {
+        //Get dat sound system interface
+        diji::ISoundSystem& soundSystem = diji::ServiceLocator::GetSoundSystem();
+
+        //Make those sound effect parameters
+        std::string audioFile; //Make audio file string
+        const bool isMusic = false; // Its a sound effect so its false
+        int volume;      // 0-100 volume
+        
         // other collision
         if (!collider->GetParent())
         {
@@ -103,14 +125,41 @@ void thomasWasLate::PlayerCharacter::FixedUpdate()
             
             if (tag == "water" || tag == "lava")
             {
+               
+                
+                
+
+                if(tag == "water")
+                {
+                    volume = 7;
+                    audioFile = "sound/waterouch.wav"; //Location of file
+                    soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
+                }
+                else 
+                {
+                    volume = 20;
+                    audioFile = "sound/lavaouch.wav"; //Location of file
+                    soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
+                }
+
+                
+
+                
                 m_TransformCompPtr->SetPosition(m_SpawnPoint);
             }
 
             if (tag == "void")
             {
+                
+                volume = 25;
+                audioFile = "sound/bruh.wav"; //Location of file
+                soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
+
                 m_TransformCompPtr->SetPosition(m_SpawnPoint);
             }
             
+            
+
             return;
         }
 
@@ -193,8 +242,8 @@ void thomasWasLate::PlayerCharacter::OnNewLevelLoaded()
 {
     m_TransformCompPtr->SetPosition(static_cast<sf::Vector2f>(GameManager::GetInstance().GetStartPosition()));
 
-    if (m_CurrentCharacter == CurrentPlayer::Bob)
-        m_TransformCompPtr->AddOffset(0.f, -100.f);
+  // if (m_CurrentCharacter == CurrentPlayer::Bob)
+     //m_TransformCompPtr->AddOffset(0.f, -100.f);
 
     m_SpawnPoint = m_TransformCompPtr->GetPosition();
 }

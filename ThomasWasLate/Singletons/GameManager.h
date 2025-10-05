@@ -11,8 +11,8 @@ namespace thomasWasLate
 {
     enum class CurrentPlayer
     {
-        Thomas = 0,
-        Bob, Jim
+        Jim = 0,
+       John
     };
     
     class GameManager final : public diji::Singleton<GameManager>

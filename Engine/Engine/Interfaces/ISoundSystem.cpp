@@ -1,6 +1,6 @@
 ﻿#include "ISoundSystem.h"
 #include "../Singleton/ResourceManager.h"
-// #include "Music.h"
+//#include "Music.h"
 #include <SFML/Audio/Sound.hpp>
 
 #include <iostream>
@@ -15,20 +15,25 @@ namespace diji
 		if (audio == "invalid")
 			return;
 
+		auto& soundEffect = ResourceManager::GetInstance().LoadSoundEffect(audio);
+
 		if (isMusic)
 		{
-			// Music* music = nullptr;
-			// music = ResourceManager::GetInstance().LoadMusic(audio);
-			// m_LastMusicPlayed = audio;
-			// if (music)
-			// {
-			// 	music->Play(true);
-			// 	music->SetVolume(volume);
-			// }
-			return;
+			//Music now loops
+			soundEffect.setLooping(true);
+
+			/*Music* music = nullptr;
+			music = ResourceManager::GetInstance().LoadMusic(audio);
+			m_LastMusicPlayed = audio;
+			if (music)
+			{
+				music->Play(true);
+			 	music->SetVolume(volume);
+			 }
+			return;*/
 		}
 
-        auto& soundEffect = ResourceManager::GetInstance().LoadSoundEffect(audio);
+       
 		
         soundEffect.setVolume(static_cast<float>(volume));
         soundEffect.play();
@@ -58,6 +63,7 @@ namespace diji
 
 		if (m_IsPaused)
 			return;
+
 
 		if (not m_SoundQueue.empty())
 		{

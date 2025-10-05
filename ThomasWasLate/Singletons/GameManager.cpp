@@ -11,12 +11,12 @@
 #include "Engine/Singleton/GameStateManager.h"
 #include "Engine/Singleton/SceneManager.h"
 
-void thomasWasLate::GameManager::SwitchPlayer()
+/*void thomasWasLate::GameManager::SwitchPlayer()
 {
     m_CurrentPlayer = static_cast<bool>(m_CurrentPlayer) ? CurrentPlayer::Thomas : CurrentPlayer::Bob;
 
     OnPlayerSwitchedEvent.Broadcast();
-}
+}*/
 
 void thomasWasLate::GameManager::LoadLevel()
 {

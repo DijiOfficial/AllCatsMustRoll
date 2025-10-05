@@ -2,6 +2,7 @@
 #include "Engine/Singleton/SceneManager.h"
 #include "../Components/PlayerCharacter.h"
 #include "../Singletons/GameManager.h"
+#include "Engine/Interfaces/ISoundSystem.h"
 
 /*thomasWasLate::SwitchSplitScreenView::SwitchSplitScreenView(diji::GameObject* actor, PlayerCharacter* thomas, PlayerCharacter* bob)
     : GameActorCommands{ actor }
@@ -29,6 +30,17 @@ thomasWasLate::MoveCharacter::MoveCharacter(diji::GameObject* actor, const sf::V
 void thomasWasLate::MoveCharacter::Execute()
 {
     m_Character->Move(m_Direction);
+
+    //Get dat sound system interface
+    diji::ISoundSystem& soundSystem = diji::ServiceLocator::GetSoundSystem();
+
+    //Make those sound effect parameters
+    const std::string audioFile = "sound/jump.wav"; //Location of file
+    const bool isMusic = false; // Its a sound effect so its false
+    const int volume = 3;      // 0-100 volume
+
+    //Send a request to play dat sound
+    soundSystem.AddSoundRequest(audioFile, isMusic, volume);
    
 }
 

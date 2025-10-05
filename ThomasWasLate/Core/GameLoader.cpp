@@ -21,6 +21,8 @@
 #include "Engine/Core/Engine.h"
 #include "Engine/Singleton/GameStateManager.h"
 
+
+
 using namespace diji;
 
 void SceneLoader::GameStartUp()
@@ -47,7 +49,7 @@ void SceneLoader::Level()
     // static_cast<float>(window::VIEWPORT.x) * -0.5f + 25.f, static_cast<float>(window::VIEWPORT.y) * -0.5f + 25.f
     const auto staticBackground = scene->CreateGameObject("A_StaticBackground");
     staticBackground->AddComponents<Transform>(0, 0);
-    staticBackground->AddComponents<TextureComp>("graphics/background.png");
+    staticBackground->AddComponents<TextureComp>("graphics/sky.png");
     staticBackground->AddComponents<Render>();
     scene->SetGameObjectAsStaticBackground(staticBackground);
 
@@ -88,6 +90,18 @@ void SceneLoader::Level()
     jim->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Jim, 0.25f);
     jim->AddComponents<CircRender>(true);
 
+
+    //Get dat sound system interface
+    diji::ISoundSystem& soundSystem = diji::ServiceLocator::GetSoundSystem();
+
+    //Make those sound effect parameters
+    const std::string audioFile = "sound/background1.wav"; //Location of file
+    const bool isMusic = true; // Its a sound effect so its false
+    const int volume = 100;      // 0-100 volume
+
+    //Send a request to play dat sound
+    soundSystem.AddSoundRequest(audioFile, isMusic, volume);
+   
     
 #pragma region Commands
     auto& input = InputManager::GetInstance();
