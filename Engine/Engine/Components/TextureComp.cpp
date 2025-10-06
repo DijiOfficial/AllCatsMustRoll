@@ -29,6 +29,7 @@ diji::TextureComp::TextureComp(GameObject* ownerPtr, std::string filename, const
 	, m_ScaleX{ scale }
 	, m_ScaleY{ scale }
 {
+
 }
 
 void diji::TextureComp::Init()

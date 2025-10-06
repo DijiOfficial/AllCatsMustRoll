@@ -18,8 +18,7 @@
 #include "Engine/Components/TextComp.h"
 #include "Engine/Core/Engine.h"
 #include "Engine/Singleton/GameStateManager.h"
-
-
+#include "../RotatingPlatform.h" // Corrected the include path to match the directory structure
 
 using namespace diji;
 
@@ -91,6 +90,39 @@ void SceneLoader::Level()
     // jim->GetComponent<Collider>()->SetAffectedByGravity(false);
     jim->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Jim, 0.25f);
     jim->AddComponents<ShapeRender>(true);
+
+
+    // In SceneLoader::Level() — minimal snippet to create the rotating platform object
+    const auto platform = scene->CreateGameObject("RotatingPlatform");
+    platform->AddComponents<Transform>(400.f, 300.f);
+    platform->AddComponents<Collider>(CollisionShape::ShapeType::RECT, sf::Vector2f{ 200.f, 20.f });
+    platform->AddComponents<TextureComp>("graphics/platform.png");
+    platform->AddComponents<Render>();
+    platform->AddComponents<thomasWasLate::RotatingPlatform>(100.f);
+
+
+   /* const auto platform = scene->CreateGameObject("RotatingPlatform");
+    platform->AddComponents<Transform>(400.f, 300.f);
+
+    // collider (kept for physics/size reference)
+    platform->AddComponents<Collider>(CollisionShape::ShapeType::RECT, sf::Vector2f{ 200.f, 20.f });
+
+    // visible sprite (no debug renderer)
+    platform->AddComponents<TextureComp>("graphics/platform.png");
+    platform->AddComponents<Render>();
+
+    // rotate with W/S
+    platform->AddComponents<thomasWasLate::RotatingPlatform>(100.f);
+
+    auto* platCol = platform->GetComponent<Collider>();
+    platCol->SetStatic(true);       // keep it from falling / being simulated
+    platCol->SetRestitution(0.f);   // no bounce
+    platCol->SetFriction(1.f);      // stable contact
+	platCol->SetAffectedByGravity(false); // ignore gravity*/
+    
+
+
+
 
     //Get dat sound system interface
     diji::ISoundSystem& soundSystem = diji::ServiceLocator::GetSoundSystem();

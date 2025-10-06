@@ -63,9 +63,12 @@ void diji::Render::RenderFrame() const
         Renderer::GetInstance().RenderText(m_TextCompPtr->GetText(), pos.x, pos.y, 1.f, m_TextCompPtr->GetIsCentered());
     else if (m_SpriteCompPtr)
         m_SpriteCompPtr->Render();
+
+
 }
 
 void diji::Render::UpdateTexture(sf::Texture& texture)
 {
     m_SFMLTexture = texture;
+
 }
