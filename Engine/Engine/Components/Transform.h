@@ -43,6 +43,10 @@ namespace diji
 		void Seek(float speed);
 		void SetTarget(const GameObject* target);
 		[[nodiscard]] Transform* GetTarget() const { return m_Target; }
+
+		//Get and add rotation functions
+		[[nodiscard]] float GetRotation() const { return m_Rotation; }
+		void AddRotation(const float angle) { m_Rotation += angle; }
 		
 	private:
 		sf::Vector2f m_Position;
@@ -50,5 +54,8 @@ namespace diji
 		// also separate 
 		Transform* m_Target = nullptr;
 		TimeSingleton& m_TimeSingleton = TimeSingleton::GetInstance();
+
+		//Value for amount of rotation
+		float m_Rotation = 0.0f;
 	};
 }

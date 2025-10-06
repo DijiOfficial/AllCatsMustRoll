@@ -162,6 +162,20 @@ void thomasWasLate::PlayerCharacter::Move(const sf::Vector2f& direction) const
 {
     // will have to figure out how to clamp it
     m_ColliderCompPtr->ApplyForce(direction * m_Speed);
+
+    //Change the speed of the rotation here
+    const float rotationSpeed = 5.0f;
+
+    //Amount of rotation calculated based on its direction
+    float rotationAmount = direction.x * rotationSpeed;
+
+    //Apply the rotation if Jim is moving
+    if (rotationAmount != 0.0f)
+    {
+        //Send the calculated rotation amoount to AddRotation function
+        m_TransformCompPtr->AddRotation(rotationAmount);
+    }
+
 }
 
 void thomasWasLate::PlayerCharacter::SetCameraFollow() const
