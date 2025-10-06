@@ -9,7 +9,6 @@
 #include "Pistol.h"
 #include "Zombie.h"
 #include "../Core/GameState.h"
-#include "Engine/Collision/CollisionSingleton.h"
 #include "Engine/Collision/Collider.h"
 #include "Engine/Components/Camera.h"
 #include "Engine/Components/Sprite.h"
@@ -73,15 +72,15 @@ void zombieArena::Player::FixedUpdate()
 {
     if (m_IsHit) return;
 
-    const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(m_ColliderCompPtr);
-    for (const auto& collider : colliders)
-    {
-        if (!collider->GetParent()->HasComponent<Zombie>())
-            continue;
-
-        Hit(10);
-        break;
-    }
+    // const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(m_ColliderCompPtr);
+    // for (const auto& collider : colliders)
+    // {
+    //     if (!collider->GetParent()->HasComponent<Zombie>())
+    //         continue;
+    //
+    //     Hit(10);
+    //     break;
+    // }
 }
 
 void zombieArena::Player::OnDestroy()

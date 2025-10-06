@@ -1,15 +1,15 @@
 ﻿#include "TimeBar.h"
 
 #include "../Singleton/GameManager.h"
+#include "Engine/Components/ShapeRender.h"
 #include "Engine/Core/GameObject.h"
 #include "Engine/Singleton/TimeSingleton.h"
-#include "Engine/Components/RectRender.h"
 #include "Engine/Interfaces/ISoundSystem.h"
 #include "Engine/Singleton/PauseSingleton.h"
 
 void timber::TimeBar::Init()
 {
-    m_RectRenderCompPtr = GetOwner()->GetComponent<diji::RectRender>();
+    m_RectRenderCompPtr = GetOwner()->GetComponent<diji::ShapeRender>();
 }
 
 void timber::TimeBar::Update()
@@ -17,7 +17,7 @@ void timber::TimeBar::Update()
     // std::cout << m_RemainingTime << std::endl;
     m_RemainingTime -= diji::TimeSingleton::GetInstance().GetDeltaTime(); // optimize this call?
 
-    m_RectRenderCompPtr->GetRectangle().setSize(sf::Vector2f{ m_WidthPerSecond * m_RemainingTime, m_RectRenderCompPtr->GetRectangle().getSize().y});
+    // m_RectRenderCompPtr->GetRectangle().setSize(sf::Vector2f{ m_WidthPerSecond * m_RemainingTime, m_RectRenderCompPtr->GetShape().getLocalBounds().size.x});
 
     if (m_RemainingTime <= 0.0f)
     {
@@ -31,7 +31,7 @@ void timber::TimeBar::Update()
 void timber::TimeBar::Reset()
 {
     m_RemainingTime = 6.f;
-    m_RectRenderCompPtr->GetRectangle().setSize(sf::Vector2f{ 200.f, m_RectRenderCompPtr->GetRectangle().getSize().y });
+    // m_RectRenderCompPtr->GetRectangle().setSize(sf::Vector2f{ 200.f, m_RectRenderCompPtr->GetRectangle().getSize().y });
 }
 
 void timber::TimeBar::AddTime(const int score)

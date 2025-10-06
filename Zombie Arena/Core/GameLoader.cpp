@@ -12,7 +12,6 @@
 #include "../Components/Spawner.h"
 #include "../Components/WaveCounter.h"
 #include "../Input/CustomCommands.h"
-#include "Engine/Collision/CollisionSingleton.h"
 #include "Engine//Collision/Collider.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/SceneManager.h"
@@ -22,7 +21,7 @@
 #include "Engine/Components/Render.h"
 #include "Engine/Components/Camera.h"
 #include "Engine/Components/FPSCounter.h"
-#include "Engine/Components/RectRender.h"
+#include "Engine/Components/ShapeRender.h"
 #include "Engine/Components/ScoreCounter.h"
 #include "Engine/Components/Sprite.h"
 #include "Engine/Components/TextComp.h"
@@ -55,15 +54,15 @@ void SceneLoader::ZombieArena()
 
     sf::IntRect arena{ sf::Vector2i{ 0, 0 }, zombieArena::GameManager::GetInstance().GetMapSize() };
     sf::IntRect arenaInner{ sf::Vector2i{ 50, 50 }, zombieArena::GameManager::GetInstance().GetMapSize() - sf::Vector2i{ 100, 100 } };
-    constexpr int TILE_SIZE = 50;
-    const Rectf rectfArena
-    {
-        .left = static_cast<float>(arena.position.x + TILE_SIZE),
-        .bottom = static_cast<float>(arena.position.y + TILE_SIZE),
-        .width = static_cast<float>(arena.size.x - TILE_SIZE),
-        .height = static_cast<float>(arena.size.y - TILE_SIZE)
-    };
-    CollisionSingleton::GetInstance().ParseRectInLevelCollider(rectfArena);
+    // constexpr int TILE_SIZE = 50;
+    // const sf::RectangleShape rectfArena
+    // {
+    //     .left = static_cast<float>(arena.position.x + TILE_SIZE),
+    //     .bottom = static_cast<float>(arena.position.y + TILE_SIZE),
+    //     .width = static_cast<float>(arena.size.x - TILE_SIZE),
+    //     .height = static_cast<float>(arena.size.y - TILE_SIZE)
+    // };
+    // CollisionSingleton::GetInstance().ParseRectInLevelCollider(rectfArena);
 
     const auto pistol = scene->CreateGameObject("Pistol");
     pistol->AddComponents<Transform>(0, 0);
@@ -76,7 +75,7 @@ void SceneLoader::ZombieArena()
     player->AddComponents<Render>();
     player->AddComponents<zombieArena::Player>(arenaInner);
     player->GetComponent<zombieArena::Player>()->GivePistol(pistol);
-    player->AddComponents<Collider>();
+    // player->AddComponents<Collider>();
     player->AddComponents<Camera>(1920.f, 1080.f);
     player->GetComponent<Camera>()->SetLevelBoundaries(static_cast<sf::FloatRect>(arena));
     pistol->SetParent(player, false);
@@ -153,14 +152,14 @@ void SceneLoader::ZombieArena()
     
     const auto healthBar = scene->CreateGameObject("Z_healthBarHUD");
     healthBar->AddComponents<Transform>(650, 980);
-    healthBar->AddComponents<RectRender>();
+    healthBar->AddComponents<ShapeRender>();
     
     sf::RectangleShape rect2;
     rect2.setSize(sf::Vector2f{545 , 125});
 
-    healthBar->GetComponent<RectRender>()->SetRectangle(rect2);
-    healthBar->GetComponent<RectRender>()->SetFillColor(sf::Color::Red);
-    healthBar->GetComponent<RectRender>()->SetLineWidth(0.f);
+    // healthBar->GetComponent<ShapeRender>()->SetRectangle(rect2);
+    healthBar->GetComponent<ShapeRender>()->SetFillColor(sf::Color::Red);
+    healthBar->GetComponent<ShapeRender>()->SetLineWidth(0.f);
     healthBar->AddComponents<zombieArena::HealthBar>();
     
     scene->SetGameObjectAsCanvasObject("Z_ammoTextHUD");

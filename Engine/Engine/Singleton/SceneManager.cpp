@@ -1,17 +1,18 @@
 ﻿#include "SceneManager.h"
+#include "TimerManager.h"
+#include "../Components/Transform.h"
+#include "../Input/InputManager.h"
 
 #include <ranges>
 #include <stdexcept>
 
-#include "TimerManager.h"
-#include "../Collision/CollisionSingleton.h"
-#include "../Components/Transform.h"
-#include "../Input/InputManager.h"
-
 diji::Scene* diji::SceneManager::CreateScene(const int id)
 {
+    if (!m_PhysicsWorldUPtr) // Kinda hacky but it works for now
+        m_PhysicsWorldUPtr = std::make_unique<PhysicsWorld>();
+    
     // Check if the scene already exists in the map
-    auto it = m_ScenesUPtrMap.find(id);
+    const auto it = m_ScenesUPtrMap.find(id);
     if (it != m_ScenesUPtrMap.end())
     {
         // Scene already exists, return the existing scene
@@ -41,6 +42,8 @@ void diji::SceneManager::Start() const
 
 void diji::SceneManager::FixedUpdate() const
 {
+    m_PhysicsWorldUPtr->FixedUpdate();
+    
     m_ScenesUPtrMap.at(m_ActiveSceneId)->FixedUpdate();
 }
 
@@ -88,11 +91,11 @@ void diji::SceneManager::EndFrameUpdate()
         // Clear Commands assigned for that scene
         InputManager::GetInstance().ResetCommands();
 
-        // Clear All Colliders
-        CollisionSingleton::GetInstance().Reset();
-
         // Clear all timers
         TimerManager::GetInstance().ClearAllTimers();
+
+        // Clear Physics World
+        m_PhysicsWorldUPtr->Reset();
         
         // Destroy current scene
         OnDestroy();
@@ -106,8 +109,8 @@ void diji::SceneManager::EndFrameUpdate()
         else
             throw std::runtime_error("SceneLoader not registered for SceneId.");
 
-        m_ScenesUPtrMap.at(m_ActiveSceneId)->Init();
-        m_ScenesUPtrMap.at(m_ActiveSceneId)->Start();
+        Init();
+        Start();
     }
 }
 
@@ -130,6 +133,18 @@ std::string diji::SceneManager::GetGameObjectName(const GameObject* object) cons
 diji::GameObject* diji::SceneManager::SpawnGameObject(const std::string& name, const GameObject* original, const sf::Vector2f& spawnLocation) const
 {
     const auto gameObject = m_ScenesUPtrMap.at(m_ActiveSceneId).get()->CreateGameObjectFromTemplate(name, original);
+
+    gameObject->GetComponent<Transform>()->SetPosition(spawnLocation);
+
+    gameObject->Init();
+    gameObject->Start();
+
+    return gameObject;
+}
+
+diji::GameObject* diji::SceneManager::SpawnGameObject(const std::string& name, std::unique_ptr<GameObject> original, const sf::Vector2f& spawnLocation) const
+{
+    const auto gameObject = m_ScenesUPtrMap.at(m_ActiveSceneId).get()->AddObjectToScene(std::move(original), name);
 
     gameObject->GetComponent<Transform>()->SetPosition(spawnLocation);
 

@@ -29,7 +29,7 @@ void zombieArena::Pistol::Init()
     m_BulletTemplate = std::make_unique<diji::GameObject>();
     m_BulletTemplate->AddComponents<diji::Transform>(position.x, position.y);
     m_BulletTemplate->AddComponents<diji::TextureComp>("graphics/bullet.png");
-    m_BulletTemplate->AddComponents<diji::Collider>();
+    // m_BulletTemplate->AddComponents<diji::Collider>();
     m_BulletTemplate->AddComponents<diji::Render>();
     m_BulletTemplate->AddComponents<Bullet>();
 }

@@ -2,7 +2,6 @@
 
 #include "GameManager.h"
 #include "Player.h"
-#include "Engine/Collision/CollisionSingleton.h"
 #include "Engine/Collision/Collider.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/RandNumber.h"
@@ -41,16 +40,16 @@ void zombieArena::PickUpBase::Init()
 
 void zombieArena::PickUpBase::FixedUpdate()
 {
-    const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(m_ColliderCompPtr);
-    for (const auto& collider : colliders)
-    {
-        if (!collider->GetParent()->HasComponent<Player>())
-            continue;
-
-        diji::SceneManager::GetInstance().SetPendingDestroy(GetOwner());
-        GameManager::GetInstance().OnPickedUpEvent.Broadcast(m_Type, m_Value);
-        break;
-    }
+    // const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(m_ColliderCompPtr);
+    // for (const auto& collider : colliders)
+    // {
+    //     if (!collider->GetParent()->HasComponent<Player>())
+    //         continue;
+    //
+    //     diji::SceneManager::GetInstance().SetPendingDestroy(GetOwner());
+    //     GameManager::GetInstance().OnPickedUpEvent.Broadcast(m_Type, m_Value);
+    //     break;
+    // }
 }
 
 void zombieArena::PickUpBase::Spawn() const

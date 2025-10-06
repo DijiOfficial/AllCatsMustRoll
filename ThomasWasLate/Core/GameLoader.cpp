@@ -5,7 +5,6 @@
 #include "../Components/PlayerCharacter.h"
 #include "../Input/CustomCommands.h"
 #include "../Singletons/GameManager.h"
-#include "Engine/Collision/CollisionSingleton.h"
 #include "Engine//Collision/Collider.h"
 #include "Engine/Components/TextureComp.h"
 #include "Engine/Singleton/SceneManager.h"
@@ -14,8 +13,7 @@
 #include "Engine/Components/Transform.h"
 #include "Engine/Components/Render.h"
 #include "Engine/Components/Camera.h"
-#include "Engine/Components/RectRender.h"
-#include "Engine/Components/CircRender.h"
+#include "Engine/Components/ShapeRender.h"
 #include "Engine/Components/Sprite.h"
 #include "Engine/Components/TextComp.h"
 #include "Engine/Core/Engine.h"
@@ -46,10 +44,10 @@ void SceneLoader::Level()
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(thomasWasLate::thomasWasLateState::Level));
     GameStateManager::GetInstance().SetNewGameState(static_cast<GameState>(thomasWasLate::thomasWasLateState::Level));
 
-    // static_cast<float>(window::VIEWPORT.x) * -0.5f + 25.f, static_cast<float>(window::VIEWPORT.y) * -0.5f + 25.f
     const auto staticBackground = scene->CreateGameObject("A_StaticBackground");
-    staticBackground->AddComponents<Transform>(0, 0);
-    staticBackground->AddComponents<TextureComp>("graphics/sky.png");
+    staticBackground->AddComponents<Transform>(static_cast<float>(window::VIEWPORT.x) * 0.5f, static_cast<float>(window::VIEWPORT.y) * 0.5f);
+    staticBackground->AddComponents<TextureComp>("graphics/background - Copy.png");
+    // staticBackground->AddComponents<TextureComp>("graphics/sky.png");
     staticBackground->AddComponents<Render>();
     scene->SetGameObjectAsStaticBackground(staticBackground);
 
@@ -86,10 +84,13 @@ void SceneLoader::Level()
     jim->AddComponents<Transform>(200, 0);
     jim->AddComponents<TextureComp>("graphics/jim.png");
     jim->AddComponents<Render>();
-    jim->AddComponents<Collider>(44, 35, sf::Vector2f{ 3.f, 15.f });
+    jim->AddComponents<Collider>(CollisionShape::ShapeType::CIRCLE, 25.f);
+    // jim->AddComponents<Collider>(CollisionShape::ShapeType::RECT, sf::Vector2f{50, 50});
+    jim->GetComponent<Collider>()->SetRestitution(0.4f);
+    jim->GetComponent<Collider>()->SetFriction(0.2f);
+    // jim->GetComponent<Collider>()->SetAffectedByGravity(false);
     jim->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Jim, 0.25f);
-    jim->AddComponents<CircRender>(true);
-
+    jim->AddComponents<ShapeRender>(true);
 
     //Get dat sound system interface
     diji::ISoundSystem& soundSystem = diji::ServiceLocator::GetSoundSystem();

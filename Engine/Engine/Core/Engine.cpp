@@ -40,6 +40,7 @@ void diji::Engine::Run(const std::function<void()>& load) const
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
 	const auto& pause = PauseSingleton::GetInstance();
+	auto& time = TimeSingleton::GetInstance();
 
 	auto lastFrameTime{ std::chrono::high_resolution_clock::now() };
 	float lag = 0.0f;
@@ -47,7 +48,7 @@ void diji::Engine::Run(const std::function<void()>& load) const
 	sceneManager.Init();
 	sceneManager.Start();
 
-	TimeSingleton::GetInstance().SetFixedUpdateDeltaTime(FIXED_TIME_STEP);
+	time.SetFixedUpdateDeltaTime(FIXED_TIME_STEP);
 	
 	while (window::g_window_ptr->isOpen())
 	{
@@ -72,6 +73,7 @@ void diji::Engine::Run(const std::function<void()>& load) const
 			lag -= FIXED_TIME_STEP;
 		}
 
+		time.SetFixedTimeAlpha(lag / FIXED_TIME_STEP);
 		// starting to consider passing the deltaTime to Update methods with [[maybe_unused]] attribute
 		// TimeSingleton is useful for other purposes but gets annoying to use in update methods and mostly optimizing the call
 		sceneManager.Update();

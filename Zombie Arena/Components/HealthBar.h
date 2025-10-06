@@ -3,7 +3,7 @@
 
 namespace diji
 {
-    class RectRender;
+    class ShapeRender;
 }
 
 namespace zombieArena
@@ -27,7 +27,7 @@ namespace zombieArena
 
         void UpdateHealthBar(int health) const;
     private:
-        diji::RectRender* m_RectRenderCompPtr = nullptr;
+        diji::ShapeRender* m_RectRenderCompPtr = nullptr;
         const float HEALTH_BAR_HEIGHT = 50.f;
     };
 }

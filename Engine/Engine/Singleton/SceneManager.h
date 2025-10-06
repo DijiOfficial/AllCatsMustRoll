@@ -1,16 +1,18 @@
 ﻿#pragma once
 #include "Singleton.h"
 #include "../Core/Scene.h"
+#include "../Collision/PhysicsWorld.h"
 
 namespace diji
 {
+    class PhysicsWorld;
+
     class SceneManager final : public Singleton<SceneManager>
     {
     public:
         Scene* CreateScene(int id);
 
         // Similar loop to Unity
-
         // Initialization phase
         void Init() const;          // 1st
         void Start() const;         // 2nd
@@ -36,6 +38,8 @@ namespace diji
         [[nodiscard]] GameObject* GetGameObject(const std::string& name) const;
         [[nodiscard]] std::string GetGameObjectName(const GameObject* object) const;
         GameObject* SpawnGameObject(const std::string& name, const GameObject* original, const sf::Vector2f& spawnLocation) const;
+        GameObject* SpawnGameObject(const std::string& name, std::unique_ptr<GameObject> original, const sf::Vector2f& spawnLocation) const;
+
         void ChangePlayerViewCenter(int currPlayer, const sf::Vector2f& newCenter) const;
         void SetViewParameters(int idx, const Transform* target, bool isFollowing = false, const sf::Vector2f& offset = {}) const;
         
@@ -43,12 +47,15 @@ namespace diji
         void RegisterScene(const int id, SceneLoaderFunc loader) { m_SceneLoaders[id] = std::move(loader); }
 
         void SetMultiplayerSplitScreen(int numPlayers);
-        
+
+        [[nodiscard]] PhysicsWorld* GetPhysicsWorld() const { return m_PhysicsWorldUPtr.get(); }
+
     private:
         // todo: replace int with SceneId enum class??
         std::map<int, std::unique_ptr<Scene>> m_ScenesUPtrMap;
         std::vector<const GameObject*> m_PendingDestroyVec;
         std::unordered_map<int, SceneLoaderFunc> m_SceneLoaders;
+        std::unique_ptr<PhysicsWorld> m_PhysicsWorldUPtr = nullptr;
         
         int m_ActiveSceneId = 0;
         int m_NextScene = 0;

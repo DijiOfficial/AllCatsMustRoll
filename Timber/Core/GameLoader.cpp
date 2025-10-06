@@ -1,6 +1,7 @@
 ﻿#include "GameLoader.h"
 
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 #include "GameStates.h"
 #include "../Components/AxeBehaviour.h"
@@ -15,7 +16,6 @@
 #include "../Inputs/CustomCommands.h"
 #include "../Singleton/GameManager.h"
 #include "Engine/Components/FPSCounter.h"
-#include "Engine/Components/RectRender.h"
 
 #include "Engine/Singleton/SceneManager.h"
 #include "Engine/Components/TextureComp.h"
@@ -23,6 +23,7 @@
 #include "Engine/Components/Render.h"
 #include "Engine/Components/TextComp.h"
 #include "Engine/Components/ScoreCounter.h"
+#include "Engine/Components/ShapeRender.h"
 #include "Engine/Input/InputManager.h"
 #include "Engine/Interfaces/ISoundSystem.h"
 
@@ -125,15 +126,15 @@ void SceneLoader::Timber()
 
     const auto timeBar = timberScene->CreateGameObject("Z_timeBarHUD");
     timeBar->AddComponents<Transform>(760, 940);
-    timeBar->AddComponents<RectRender>();
+    timeBar->AddComponents<ShapeRender>();
     
     sf::RectangleShape rect;
     rect.setSize(sf::Vector2f{400 , 80});
     rect.setPosition(sf::Vector2f{760, 980});
 
-    timeBar->GetComponent<RectRender>()->SetRectangle(rect);
-    timeBar->GetComponent<RectRender>()->SetFillColor(sf::Color::Red);
-    timeBar->GetComponent<RectRender>()->SetLineWidth(0.f);
+    // timeBar->GetComponent<ShapeRender>()->SetRectangle(rect);
+    timeBar->GetComponent<ShapeRender>()->SetFillColor(sf::Color::Red);
+    timeBar->GetComponent<ShapeRender>()->SetLineWidth(0.f);
     timeBar->AddComponents<timber::TimeBar>();
     timeBar->SetParent(HUD, false);
     
@@ -194,15 +195,15 @@ void SceneLoader::Timber()
     
     const auto backgroundUI = timberScene->CreateGameObject("Z_backgroundUIHUD");
     backgroundUI->AddComponents<Transform>(20, 20);
-    backgroundUI->AddComponents<RectRender>();
+    backgroundUI->AddComponents<ShapeRender>();
     
     sf::RectangleShape rect2;
     rect2.setSize(sf::Vector2f{545 , 125});
     rect2.setPosition(sf::Vector2f{15, 15});
 
-    backgroundUI->GetComponent<RectRender>()->SetRectangle(rect2);
-    backgroundUI->GetComponent<RectRender>()->SetFillColor(sf::Color(0, 0, 0, 150));
-    backgroundUI->GetComponent<RectRender>()->SetLineWidth(0.f);
+    // backgroundUI->GetComponent<ShapeRender>()->SetRectangle(rect2);
+    backgroundUI->GetComponent<ShapeRender>()->SetFillColor(sf::Color(0, 0, 0, 150));
+    backgroundUI->GetComponent<ShapeRender>()->SetLineWidth(0.f);
     
     const auto fpsCounter = timberScene->CreateGameObject("fpsCounter");
     fpsCounter->AddComponents<TextComp>("0 FPS", "fonts/KOMIKAP_.ttf", sf::Color::White, true);
@@ -213,15 +214,15 @@ void SceneLoader::Timber()
 
     const auto backgroundUI2 = timberScene->CreateGameObject("Z_backgroundUI2HUD");
     backgroundUI2->AddComponents<Transform>(20, 20);
-    backgroundUI2->AddComponents<RectRender>();
+    backgroundUI2->AddComponents<ShapeRender>();
     
     sf::RectangleShape rect3;
     rect3.setSize(sf::Vector2f{180 , 50});
     rect3.setPosition(sf::Vector2f{static_cast<int>(1920 - 190.f), 15});
 
-    backgroundUI2->GetComponent<RectRender>()->SetRectangle(rect3);
-    backgroundUI2->GetComponent<RectRender>()->SetFillColor(sf::Color(0, 0, 0, 150));
-    backgroundUI2->GetComponent<RectRender>()->SetLineWidth(0.f);
+    // backgroundUI2->GetComponent<ShapeRender>()->SetRectangle(rect3);
+    backgroundUI2->GetComponent<ShapeRender>()->SetFillColor(sf::Color(0, 0, 0, 150));
+    backgroundUI2->GetComponent<ShapeRender>()->SetLineWidth(0.f);
 #pragma region Observers
     player->GetComponent<timber::PlayerBehaviour>()->OnPauseEvent.AddListener(pauseText->GetComponent<timber::PauseBehaviourText>(), &timber::PauseBehaviourText::RefreshDisplay);
     timeBar->GetComponent<timber::TimeBar>()->OnGameOverEvent.AddListener(pauseText->GetComponent<timber::PauseBehaviourText>(), &timber::PauseBehaviourText::OnGameOver);

@@ -19,7 +19,7 @@ void zombieArena::GameManager::Init()
         m_HealthPickUpTemplate->AddComponents<diji::TextureComp>();
         m_HealthPickUpTemplate->GetComponent<diji::TextureComp>()->SetOriginToCenter();
         m_HealthPickUpTemplate->AddComponents<diji::Render>();
-        m_HealthPickUpTemplate->AddComponents<diji::Collider>();
+        // m_HealthPickUpTemplate->AddComponents<diji::Collider>();
         m_HealthPickUpTemplate->AddComponents<PickUpBase>(m_InnerArenaRect, "graphics/health_pickup.png", PickUpType::HEALTH, m_HealthReceivedOnPickUp);
     }
 
@@ -30,7 +30,7 @@ void zombieArena::GameManager::Init()
         m_AmmoPickUpTemplate->AddComponents<diji::TextureComp>();
         m_AmmoPickUpTemplate->GetComponent<diji::TextureComp>()->SetOriginToCenter();
         m_AmmoPickUpTemplate->AddComponents<diji::Render>();
-        m_AmmoPickUpTemplate->AddComponents<diji::Collider>();
+        // m_AmmoPickUpTemplate->AddComponents<diji::Collider>();
         m_AmmoPickUpTemplate->AddComponents<PickUpBase>(m_InnerArenaRect, "graphics/ammo_pickup.png", PickUpType::AMMO, m_AmmoReceivedOnPickUp);
     }
     const auto ammo = diji::SceneManager::GetInstance().SpawnGameObject("D_AmmoPickup", m_AmmoPickUpTemplate.get(), sf::Vector2f{ 0, 0 });

@@ -51,6 +51,7 @@ namespace thomasWasLate
         const float GRAVITY = 300.f;
         float m_JumpTime = 0.0f;
         float m_MaxJumpTime = 0.25f;
+        float m_JumpForce = 600.f;
 
         void SetCameraFollow() const;
         void RefreshView() const { RefreshView(false); }

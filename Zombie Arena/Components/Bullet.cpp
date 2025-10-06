@@ -1,7 +1,6 @@
 ﻿#include "Bullet.h"
 
 #include "Zombie.h"
-#include "Engine/Collision/CollisionSingleton.h"
 #include "Engine/Components/Transform.h"
 #include "Engine/Singleton/SceneManager.h"
 #include "Engine/Singleton/TimerManager.h"
@@ -38,20 +37,20 @@ void zombieArena::Bullet::Update()
     m_TransformCompPtr->AddOffset(deltaMovement);
 
     // yeah I know on low fps bullets will fly by the enemy
-    const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(m_ColliderCompPtr);
-    for (const auto& collider : colliders)
-    {
-        if (!collider->GetParent()->HasComponent<Zombie>())
-            continue;
-
-        // Again I could decouple this but let's go simple for npw
-        if (collider->GetParent()->GetComponent<Zombie>()->Hit())
-            GameManager::GetInstance().OnZombieKilledEvent.Broadcast();
-
-        diji::TimerManager::GetInstance().ClearTimer(m_TimerHandle);
-        diji::SceneManager::GetInstance().SetPendingDestroy(GetOwner());
-        break;
-    }
+    // const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(m_ColliderCompPtr);
+    // for (const auto& collider : colliders)
+    // {
+    //     if (!collider->GetParent()->HasComponent<Zombie>())
+    //         continue;
+    //
+    //     // Again I could decouple this but let's go simple for npw
+    //     if (collider->GetParent()->GetComponent<Zombie>()->Hit())
+    //         GameManager::GetInstance().OnZombieKilledEvent.Broadcast();
+    //
+    //     diji::TimerManager::GetInstance().ClearTimer(m_TimerHandle);
+    //     diji::SceneManager::GetInstance().SetPendingDestroy(GetOwner());
+    //     break;
+    // }
 }
 
 void zombieArena::Bullet::SetTextureAngle() const

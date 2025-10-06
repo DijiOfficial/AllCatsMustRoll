@@ -3,7 +3,7 @@
 
 namespace diji
 {
-    class RectRender;
+    class ShapeRender;
 }
 
 namespace timber 
@@ -31,7 +31,7 @@ namespace timber
         void AddTime(int score);
         
     private:
-        diji::RectRender* m_RectRenderCompPtr = nullptr;
+        diji::ShapeRender* m_RectRenderCompPtr = nullptr;
         float m_RemainingTime = 6.f;
         float m_WidthPerSecond = 200.f / 6.f; // I could use values from the RenderRect instead of magic numbers
     };

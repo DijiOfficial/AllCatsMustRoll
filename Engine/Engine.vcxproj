@@ -20,14 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Collision\Collider.h" />
-    <ClInclude Include="Engine\Collision\CollisionSingleton.h" />
+    <ClInclude Include="Engine\Collision\CollisionShape.h" />
+    <ClInclude Include="Engine\Collision\CollisionsHelper.h" />
+    <ClInclude Include="Engine\Collision\PhysicsWorld.h" />
     <ClInclude Include="Engine\Components\Camera.h" />
-    <ClInclude Include="Engine\Components\CircRender.h" />
     <ClInclude Include="Engine\Components\Component.h" />
     <ClInclude Include="Engine\Components\FPSCounter.h" />
-    <ClInclude Include="Engine\Components\RectRender.h" />
     <ClInclude Include="Engine\Components\Render.h" />
     <ClInclude Include="Engine\Components\ScoreCounter.h" />
+    <ClInclude Include="Engine\Components\ShapeRender.h" />
     <ClInclude Include="Engine\Components\Sprite.h" />
     <ClInclude Include="Engine\Components\TextComp.h" />
     <ClInclude Include="Engine\Components\TextureComp.h" />
@@ -44,6 +45,7 @@
     <ClInclude Include="Engine\Interfaces\ISoundSystem.h" />
     <ClInclude Include="Engine\RAII_Wrappers\SplitScreenView.h" />
     <ClInclude Include="Engine\Singleton\GameStateManager.h" />
+    <ClInclude Include="Engine\Singleton\Helpers.h" />
     <ClInclude Include="Engine\Singleton\PauseSingleton.h" />
     <ClInclude Include="Engine\Singleton\RandNumber.h" />
     <ClInclude Include="Engine\Singleton\ResourceManager.h" />
@@ -54,13 +56,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Collision\Collider.cpp" />
-    <ClCompile Include="Engine\Collision\CollisionSingleton.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionShape.cpp" />
+    <ClCompile Include="Engine\Collision\CollisionsHelper.cpp" />
+    <ClCompile Include="Engine\Collision\PhysicsWorld.cpp" />
     <ClCompile Include="Engine\Components\Camera.cpp" />
-    <ClCompile Include="Engine\Components\CircRender.cpp" />
     <ClCompile Include="Engine\Components\FPSCounter.cpp" />
-    <ClCompile Include="Engine\Components\RectRender.cpp" />
     <ClCompile Include="Engine\Components\Render.cpp" />
     <ClCompile Include="Engine\Components\ScoreCounter.cpp" />
+    <ClCompile Include="Engine\Components\ShapeRender.cpp" />
     <ClCompile Include="Engine\Components\Sprite.cpp" />
     <ClCompile Include="Engine\Components\TextComp.cpp" />
     <ClCompile Include="Engine\Components\TextureComp.cpp" />

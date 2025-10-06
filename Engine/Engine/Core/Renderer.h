@@ -1,14 +1,16 @@
 ﻿#pragma once
+#include "../Singleton/Singleton.h"
+
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Vector2.hpp>
-
-#include "../Singleton/Singleton.h"
-#include <SFML/Graphics/CircleShape.hpp>
 
 namespace sf
 {
 	class VertexArray;
 	class RectangleShape;
+	class CircleShape;
+	class ConvexShape;
+	class Shape;
 	class Color;
 	class Angle;
 	class RenderWindow;
@@ -54,15 +56,13 @@ namespace diji
 		// 	}
 		// }
 
-		// todo: overload this (the cpp versions)
+		// todo: unnecessary functions?
 		void DrawRect(const sf::RectangleShape& shape, const sf::Color& outline, const sf::Color& fill, float outlineWidth = 1.f) const;
 		void DrawRect(const sf::RectangleShape& shape) const;
 		void DrawFilledRect(const sf::RectangleShape& shape, const sf::Color& color) const;
 
-		void DrawCirc(const sf::CircleShape& shape, const sf::Color& outline, const sf::Color& fill, float outlineWidth = 1.f) const;
-		void DrawCirc(const sf::CircleShape& shape) const;
-		void DrawFilledCirc(const sf::CircleShape& shape, const sf::Color& color) const;
-		
+		// Handle shape drawing with function overloading
+		void DrawShape(const sf::Shape& shape) const;
 		
 		// void DrawLine(const glm::vec2& p1, const glm::vec2& p2, const SDL_Color& color = { 255, 255, 255, 255 }) const
 		// {
