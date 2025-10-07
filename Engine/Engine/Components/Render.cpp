@@ -55,10 +55,17 @@ void diji::Render::RenderFrame() const
         return sf::Vector2f{ 0, 0 };
     }();
 
+
+    //Get the rotation value from Jim (from PlayerCharacter.cpp, which then passes it into Transform.h)
+    const float rotation = m_TransformCompPtr ? m_TransformCompPtr->GetRotation() : 0.0f;
+
+
     // todo: for future reference it would be better to pass the textureComp as a parameter at this point.
     // todo: it would be better if every object had a render component and that render comp was different than a component. You could then regardless of the component call a virtual Render function on it, making the use of custom renderer much rarer
+   
+    //sf::degrees used instead to correctly pass in the rotation variable to render Jim's new angle
     if (m_TextureCompPtr)
-        Renderer::GetInstance().RenderTexture(m_SFMLTexture, m_TextureCompPtr->GetOrigin(), m_TextureCompPtr->GetRotationAngle(), pos.x, pos.y, m_TextureCompPtr->GetScaleX(), m_TextureCompPtr->GetScaleY());
+        Renderer::GetInstance().RenderTexture(m_SFMLTexture, m_TextureCompPtr->GetOrigin(),sf::degrees(rotation), pos.x, pos.y, m_TextureCompPtr->GetScaleX(), m_TextureCompPtr->GetScaleY());
     else if (m_TextCompPtr)
         Renderer::GetInstance().RenderText(m_TextCompPtr->GetText(), pos.x, pos.y, 1.f, m_TextCompPtr->GetIsCentered());
     else if (m_SpriteCompPtr)
