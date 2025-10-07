@@ -92,34 +92,13 @@ void SceneLoader::Level()
     jim->AddComponents<ShapeRender>(true);
 
 
-    // In SceneLoader::Level() — minimal snippet to create the rotating platform object
-    const auto platform = scene->CreateGameObject("RotatingPlatform");
-    platform->AddComponents<Transform>(400.f, 300.f);
+    //rotating platform object
+	const auto platform = scene->CreateGameObject("RotatingPlatform"); // create platform object
+	platform->AddComponents<Transform>(400.f, 300.f);// set position
     platform->AddComponents<Collider>(CollisionShape::ShapeType::RECT, sf::Vector2f{ 200.f, 20.f });
     platform->AddComponents<TextureComp>("graphics/platform.png");
-    platform->AddComponents<Render>();
-    platform->AddComponents<thomasWasLate::RotatingPlatform>(100.f);
-
-
-   /* const auto platform = scene->CreateGameObject("RotatingPlatform");
-    platform->AddComponents<Transform>(400.f, 300.f);
-
-    // collider (kept for physics/size reference)
-    platform->AddComponents<Collider>(CollisionShape::ShapeType::RECT, sf::Vector2f{ 200.f, 20.f });
-
-    // visible sprite (no debug renderer)
-    platform->AddComponents<TextureComp>("graphics/platform.png");
-    platform->AddComponents<Render>();
-
-    // rotate with W/S
-    platform->AddComponents<thomasWasLate::RotatingPlatform>(100.f);
-
-    auto* platCol = platform->GetComponent<Collider>();
-    platCol->SetStatic(true);       // keep it from falling / being simulated
-    platCol->SetRestitution(0.f);   // no bounce
-    platCol->SetFriction(1.f);      // stable contact
-	platCol->SetAffectedByGravity(false); // ignore gravity*/
-    
+    platform->AddComponents<Render>();//
+	platform->AddComponents<thomasWasLate::RotatingPlatform>(100.f);// rotate 100 degrees per second
 
 
 
