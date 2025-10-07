@@ -90,16 +90,15 @@ namespace diji
         [[nodiscard]] float GetRestitution() const { return m_Restitution; }
 
         [[nodiscard]] CollisionShape::ShapeType GetShapeType() const { return m_Type; }
+        [[nodiscard]] const GameObject* GetParent() const { return GetOwner(); }
         
-        void OnCollision(Collider*) {}
-
         // not a fan of string tags perhaps use enums?
         void SetTag (const std::string& tag) { m_Tag = tag; }
         [[nodiscard]] const std::string& GetTag() const { return m_Tag; }
 
         enum class CollisionResponse
         {
-            Ignore = 0,
+            Ignore = 0, // todo: add support for ignore functionality
             Overlap,
             Block
         };

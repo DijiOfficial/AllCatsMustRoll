@@ -1,11 +1,11 @@
 ﻿#include "PhysicsWorld.h"
 #include "Collider.h"
+#include "CollisionDispatcher.h"
 #include "../Singleton/Helpers.h"
+#include "../Core/GameObject.h"
 
 #include <ranges>
 #include <stdexcept>
-
-#include "CollisionDispatcher.h"
 
 void diji::PhysicsWorld::Reset()
 {
@@ -75,6 +75,48 @@ void diji::PhysicsWorld::FixedUpdate()
     {
         UpdateFinalPosition(prediction);
     }
+
+    ProcessTriggerEvents();
+}
+
+void diji::PhysicsWorld::ProcessTriggerEvents()
+{
+    // Process Enter events (new triggers)
+    for (const auto& trigger : m_ActiveTriggers)
+    {
+        if (std::ranges::find(m_PreviousFrameTriggers, trigger) == m_PreviousFrameTriggers.end())
+        {
+            NotifyTriggerEvent(trigger, EventType::Enter);
+        }
+    }
+    
+    // Process Exit events (triggers that ended)
+    for (const auto& trigger : m_PreviousFrameTriggers)
+    {
+        if (std::ranges::find(m_ActiveTriggers, trigger) == m_ActiveTriggers.end())
+        {
+            NotifyTriggerEvent(trigger, EventType::Exit);
+        }
+    }
+    
+    // Process Stay events (continuing triggers)
+    for (const auto& trigger : m_ActiveTriggers)
+    {
+        if (std::ranges::find(m_PreviousFrameTriggers, trigger) != m_PreviousFrameTriggers.end())
+        {
+            NotifyTriggerEvent(trigger, EventType::Stay);
+        }
+    }
+}
+
+void diji::PhysicsWorld::NotifyTriggerEvent(const TriggerPair& trigger, EventType eventType)
+{
+    // Get GameObjects from both colliders and notify them
+    if (auto* triggerGameObject = trigger.trigger->GetParent())
+        triggerGameObject->NotifyTriggerEvent(trigger.other, static_cast<GameObject::TriggerEventType>(eventType));
+    
+    if (auto* otherGameObject = trigger.other->GetParent())
+        otherGameObject->NotifyTriggerEvent(trigger.trigger, static_cast<GameObject::TriggerEventType>(eventType));
 }
 
 void diji::PhysicsWorld::PredictMovement(std::vector<Prediction>& predictionsVec) const
@@ -102,6 +144,9 @@ void diji::PhysicsWorld::PredictMovement(std::vector<Prediction>& predictionsVec
 
 void diji::PhysicsWorld::DetectCollisions(std::vector<Prediction>& predictionsVec)
 {
+    m_PreviousFrameTriggers = m_ActiveTriggers;
+    m_ActiveTriggers.clear();
+    
     // for (size_t i = 0; i < predictionsVec.size() - 1; ++i)
     for (size_t i = 0; i < predictionsVec.size(); ++i)
     {
@@ -113,7 +158,10 @@ void diji::PhysicsWorld::DetectCollisions(std::vector<Prediction>& predictionsVe
             if (!AABBOverlap(predictedAABB, aabb))
                 continue;
 
-            HandleStaticCollisions(predictionsVec[i], collider);
+            if (HandleStaticCollisions(predictionsVec[i], collider))
+            {
+                m_ActiveTriggers.push_back({.trigger= colliderPtr, .other= collider});
+            }
         }
 
         for (size_t j = i + 1; j < predictionsVec.size(); ++j)
@@ -125,10 +173,12 @@ void diji::PhysicsWorld::DetectCollisions(std::vector<Prediction>& predictionsVe
                 continue;
             
             // compute dynamic-dynamic collision, push to both dyn and otherDyn
+            // if (HandleDynamicCollisions(predictionsVec[i], predictionsVec[j]))
+            // {
+            //     m_ActiveTriggers.push_back({.trigger= colliderPtr, .other=
+            //         other.collider});
+            // }
             
-            // // notify collision callback(s)
-            // colliderPtr->OnCollision(other.collider);
-            // other.collider->OnCollision(colliderPtr);
         }
     }
 }
@@ -226,8 +276,8 @@ void diji::PhysicsWorld::UpdateFinalPosition(const Prediction& prediction)
     prediction.collider->ClearNetForce();
 }
 
-void diji::PhysicsWorld::HandleStaticCollisions(Prediction& dynamicCollider, const Collider* staticCollider)
+bool diji::PhysicsWorld::HandleStaticCollisions(Prediction& dynamicCollider, const Collider* staticCollider)
 {
     static CollisionDispatcher dispatcher;
-    dispatcher.Dispatch(dynamicCollider, dynamicCollider.collider, staticCollider);
+    return dispatcher.Dispatch(dynamicCollider, dynamicCollider.collider, staticCollider);
 }

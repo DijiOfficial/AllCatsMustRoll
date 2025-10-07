@@ -6,11 +6,12 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <algorithm>
 
-void diji::CollisionsHelper::ProcessCircleToCircleCollision(
+bool diji::CollisionsHelper::ProcessCircleToCircleCollision(
     const sf::CircleShape& circleA,
     const sf::CircleShape& circleB,
     std::vector<PhysicsWorld::CollisionInfo>& collisionInfoVecA,
-    std::vector<PhysicsWorld::CollisionInfo>& collisionInfoVecB)
+    std::vector<PhysicsWorld::CollisionInfo>& collisionInfoVecB,
+    const bool isCheckingOverlap)
 {
     const sf::Vector2f centerA = circleA.getPosition() + circleA.getOrigin();
     const sf::Vector2f centerB = circleB.getPosition() + circleB.getOrigin();
@@ -21,7 +22,11 @@ void diji::CollisionsHelper::ProcessCircleToCircleCollision(
     const float radiiSum = radiusA + radiusB;
     const float radiiSumSquared = radiiSum * radiiSum;
 
-    if (distanceSquared >= radiiSumSquared) return;
+    if (distanceSquared >= radiiSumSquared)
+        return false;
+
+    if (isCheckingOverlap)
+        return true;
 
     PhysicsWorld::CollisionInfo collision;
     collision.hasCollision = true;
@@ -34,13 +39,16 @@ void diji::CollisionsHelper::ProcessCircleToCircleCollision(
     collisionInfoVecA.push_back(collision);
     collision.normal *= -1.f;
     collisionInfoVecB.push_back(collision);
+
+    return false;
 }
 
-void diji::CollisionsHelper::ProcessCircleToBoxCollision(
+bool diji::CollisionsHelper::ProcessCircleToBoxCollision(
     const sf::CircleShape& circleA,
     const sf::RectangleShape& rect,
     std::vector<PhysicsWorld::CollisionInfo>& collisionInfoVecA,
-    std::vector<PhysicsWorld::CollisionInfo>& collisionInfoVecB)
+    std::vector<PhysicsWorld::CollisionInfo>& collisionInfoVecB,
+    const bool isCheckingOverlap)
 {
     const auto cornersA = GetBoxCorners(rect);
     const sf::Vector2f closestPoint = FindClosestPointToCircle(circleA, cornersA);
@@ -62,7 +70,7 @@ void diji::CollisionsHelper::ProcessCircleToBoxCollision(
         ProjectCircleOntoAxis(circleA, axis, minB, maxB);
 
         if (maxA <= minB || maxB <= minA)
-            return; // Separation axis found, no collision
+            return false; // Separation axis found, no collision
 
         const float overlap = std::min(maxA, maxB) - std::max(minA, minB);
         if (overlap < minOverlap)
@@ -72,6 +80,9 @@ void diji::CollisionsHelper::ProcessCircleToBoxCollision(
         }
     }
 
+    if (isCheckingOverlap)
+        return true;
+    
     // Determine direction to push (centerB - centerA along the axis)
     const sf::Vector2f centerDelta = rect.getPosition() - circleA.getPosition();
     if (Helpers::DotProduct(centerDelta, smallestAxis) >= 0.f)
@@ -89,12 +100,15 @@ void diji::CollisionsHelper::ProcessCircleToBoxCollision(
     collision.normal *= -1.0f;
     collision.tangent *= -1.0f;
     collisionInfoVecB.push_back(collision);
+
+    return false;
 }
 
-void diji::CollisionsHelper::ProcessBoxToBoxCollision(
+bool diji::CollisionsHelper::ProcessBoxToBoxCollision(
     const sf::RectangleShape& rectA, const sf::RectangleShape& rectB,
     std::vector<PhysicsWorld::CollisionInfo>& collisionInfoVecA,
-    std::vector<PhysicsWorld::CollisionInfo>& collisionInfoVecB)
+    std::vector<PhysicsWorld::CollisionInfo>& collisionInfoVecB,
+    const bool isCheckingOverlap)
 {
     const auto cornersA = GetBoxCorners(rectA);
     const auto cornersB = GetBoxCorners(rectB);
@@ -129,9 +143,14 @@ void diji::CollisionsHelper::ProcessBoxToBoxCollision(
         return true;
     };
 
-    if (!testAxes(axesA)) return;
-    if (!testAxes(axesB)) return;
+    if (!testAxes(axesA))
+        return false;
+    if (!testAxes(axesB))
+        return false;
 
+    if (isCheckingOverlap)
+        return true;
+    
     // Determine direction to push (centerB - centerA along the axis)
     const sf::Vector2f centerDelta = centerB - centerA;
     if (Helpers::DotProduct(centerDelta, smallestAxis) >= 0.f)
@@ -149,6 +168,8 @@ void diji::CollisionsHelper::ProcessBoxToBoxCollision(
     collision.normal *= -1.0f;
     collision.tangent *= -1.0f;
     collisionInfoVecB.push_back(collision);
+
+    return false;
 }
 
 std::vector<sf::Vector2f> diji::CollisionsHelper::GetBoxCorners(const sf::RectangleShape& rect)

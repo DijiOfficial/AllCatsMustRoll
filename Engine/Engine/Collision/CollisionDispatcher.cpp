@@ -13,41 +13,28 @@ diji::CollisionDispatcher::CollisionDispatcher()
     // ... initialize remaining combinations
 }
 
-void diji::CollisionDispatcher::Dispatch(PhysicsWorld::Prediction& prediction, const Collider* dynamic, const Collider* staticCol) const
+bool diji::CollisionDispatcher::Dispatch(PhysicsWorld::Prediction& prediction, const Collider* dynamic, const Collider* staticCol) const
 {
     const auto dynamicType = static_cast<int>(dynamic->GetShapeType());
     const auto staticType = static_cast<int>(staticCol->GetShapeType());
 
     if (const auto handler = collisionTable_[dynamicType][staticType])
-        handler(prediction, dynamic, staticCol);
+        return handler(prediction, dynamic, staticCol);
+
+    throw std::runtime_error("No collision handler for given shape types.");
 }
 
-void diji::CollisionDispatcher::HandleCircleCircle(PhysicsWorld::Prediction& pred, const Collider* dynamic, const Collider* staticCol)
+bool diji::CollisionDispatcher::HandleCircleCircle(PhysicsWorld::Prediction& pred, const Collider* dynamic, const Collider* staticCol)
 {
-    auto shape = *dynamic_cast<const sf::CircleShape*>(&dynamic->GetShape()->GetShape());
-    shape.setPosition(pred.pos);
-    const auto otherShape = dynamic_cast<const sf::CircleShape*>(&staticCol->GetShape()->GetShape());
-        
-    std::vector<PhysicsWorld::CollisionInfo> emptyVec;
-    CollisionsHelper::ProcessCircleToCircleCollision(shape, *otherShape, pred.collisionInfoVec, emptyVec);
+    return DispatchCollision<sf::CircleShape, sf::CircleShape>(pred, dynamic, staticCol, CollisionsHelper::ProcessCircleToCircleCollision);
 }
 
-void diji::CollisionDispatcher::HandleCircleRect(PhysicsWorld::Prediction& pred, const Collider* dynamic, const Collider* staticCol)
+bool diji::CollisionDispatcher::HandleCircleRect(PhysicsWorld::Prediction& pred, const Collider* dynamic, const Collider* staticCol)
 {
-    auto shape = *dynamic_cast<const sf::CircleShape*>(&dynamic->GetShape()->GetShape());
-    shape.setPosition(pred.pos);
-    const auto otherShape = dynamic_cast<const sf::RectangleShape*>(&staticCol->GetShape()->GetShape());
-        
-    std::vector<PhysicsWorld::CollisionInfo> emptyVec;
-    CollisionsHelper::ProcessCircleToBoxCollision(shape, *otherShape, pred.collisionInfoVec, emptyVec);
+    return DispatchCollision<sf::CircleShape, sf::RectangleShape>(pred, dynamic, staticCol, CollisionsHelper::ProcessCircleToBoxCollision);
 }
 
-void diji::CollisionDispatcher::HandleRectRect(PhysicsWorld::Prediction& pred, const Collider* dynamic, const Collider* staticCol)
+bool diji::CollisionDispatcher::HandleRectRect(PhysicsWorld::Prediction& pred, const Collider* dynamic, const Collider* staticCol)
 {
-    auto shape = *dynamic_cast<const sf::RectangleShape*>(&dynamic->GetShape()->GetShape());
-    shape.setPosition(pred.pos);
-    const auto otherShape = dynamic_cast<const sf::RectangleShape*>(&staticCol->GetShape()->GetShape());
-        
-    std::vector<PhysicsWorld::CollisionInfo> emptyVec;
-    CollisionsHelper::ProcessBoxToBoxCollision(shape, *otherShape, pred.collisionInfoVec, emptyVec);
+    return DispatchCollision<sf::RectangleShape, sf::RectangleShape>(pred, dynamic, staticCol, CollisionsHelper::ProcessBoxToBoxCollision);
 }
