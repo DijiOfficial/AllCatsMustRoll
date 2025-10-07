@@ -6,6 +6,7 @@
 #include <memory>
 #include <stdexcept>
 #include <algorithm>
+#include <windows.h>
 
 namespace diji 
 {
@@ -92,13 +93,40 @@ namespace diji
         
         void OnCollision(Collider*) {}
 
+        // not a fan of string tags perhaps use enums?
         void SetTag (const std::string& tag) { m_Tag = tag; }
+        [[nodiscard]] const std::string& GetTag() const { return m_Tag; }
+
+        enum class CollisionResponse
+        {
+            Ignore = 0,
+            Overlap,
+            Block
+        };
+        
+        void SetCollisionResponse(const CollisionResponse response) { m_CollisionResponse = response; }
+        [[nodiscard]] CollisionResponse GetCollisionResponse() const { return m_CollisionResponse; }
+
+        // enum class ObjectType
+        // {
+        //     Static = 0,
+        //     Dynamic,
+        //     PhysicsBody
+        // };
+        //
+        // struct CollisionSettings
+        // {
+        //     std::map<ObjectType, CollisionResponse> m_Collision;
+        // };
 
     private:
         Transform* m_TransformCompPtr = nullptr;
         CollisionShape::ShapeType m_Type;
         std::unique_ptr<CollisionShape> m_Shape;
         const TimeSingleton& m_TimeSingletonInstance = TimeSingleton::GetInstance();
+
+        // physics settings
+        CollisionResponse m_CollisionResponse = CollisionResponse::Block;
         
         // physics state
         sf::Vector2f m_Velocity{0.f, 0.f};

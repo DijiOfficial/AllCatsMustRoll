@@ -39,11 +39,7 @@ namespace diji
 			sf::Vector2f tangent;        // Tangent vector for friction calculation
 			bool hasCollision;           // Whether collision occurred
 		};
-		
-		static float Right(const sf::FloatRect& r)  { return r.position.x + r.size.x; }
-		static float Bottom(const sf::FloatRect& r) { return r.position.y  + r.size.y; }
-	
-	private:
+
 		struct Prediction
 		{
 			Collider* collider;
@@ -53,6 +49,10 @@ namespace diji
 			std::vector<CollisionInfo> collisionInfoVec;
 		};
 		
+		static float Right(const sf::FloatRect& r)  { return r.position.x + r.size.x; }
+		static float Bottom(const sf::FloatRect& r) { return r.position.y  + r.size.y; }
+	
+	private:
 		std::vector<Collider*> m_DynamicColliders;
 		std::vector<StaticColliderInfo> m_StaticInfos;
 		

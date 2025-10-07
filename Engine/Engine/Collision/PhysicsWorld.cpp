@@ -1,10 +1,11 @@
 ﻿#include "PhysicsWorld.h"
 #include "Collider.h"
-#include "CollisionsHelper.h"
 #include "../Singleton/Helpers.h"
 
 #include <ranges>
 #include <stdexcept>
+
+#include "CollisionDispatcher.h"
 
 void diji::PhysicsWorld::Reset()
 {
@@ -227,63 +228,6 @@ void diji::PhysicsWorld::UpdateFinalPosition(const Prediction& prediction)
 
 void diji::PhysicsWorld::HandleStaticCollisions(Prediction& dynamicCollider, const Collider* staticCollider)
 {
-    // todo: eww fix this
-    std::vector<CollisionInfo> emptyCollisionsVec;
-    switch (dynamicCollider.collider->GetShapeType())
-    {
-        case CollisionShape::ShapeType::CIRCLE:
-        {
-            auto shape = *dynamic_cast<const sf::CircleShape*>(&dynamicCollider.collider->GetShape()->GetShape());
-            shape.setPosition(dynamicCollider.pos);
-            switch (staticCollider->GetShapeType())
-            {
-            case CollisionShape::ShapeType::CIRCLE:
-            {
-                const auto otherCircle = dynamic_cast<const sf::CircleShape*>(&staticCollider->GetShape()->GetShape());
-                CollisionsHelper::ProcessCircleToCircleCollision(shape, *otherCircle, dynamicCollider.collisionInfoVec, emptyCollisionsVec);
-                break;
-            }
-            case CollisionShape::ShapeType::RECT:
-            {   
-                const auto otherRect = dynamic_cast<const sf::RectangleShape*>(&staticCollider->GetShape()->GetShape());
-                CollisionsHelper::ProcessCircleToBoxCollision(shape, *otherRect, dynamicCollider.collisionInfoVec, emptyCollisionsVec);
-                break;
-            }
-            case CollisionShape::ShapeType::TRIANGLE:
-                break;
-            default:
-                break;
-            }
-            break;
-        }
-        case CollisionShape::ShapeType::RECT:
-        {
-            auto shape = *dynamic_cast<const sf::RectangleShape*>(&dynamicCollider.collider->GetShape()->GetShape());
-            shape.setPosition(dynamicCollider.pos);
-            switch (staticCollider->GetShapeType())
-            {
-            case CollisionShape::ShapeType::CIRCLE:
-                {
-                    const auto otherCircle = dynamic_cast<const sf::CircleShape*>(&staticCollider->GetShape()->GetShape());
-                    CollisionsHelper::ProcessCircleToBoxCollision(*otherCircle, shape, dynamicCollider.collisionInfoVec, emptyCollisionsVec);
-                    break;
-                }
-            case CollisionShape::ShapeType::RECT:
-                {   
-                    const auto otherRect = dynamic_cast<const sf::RectangleShape*>(&staticCollider->GetShape()->GetShape());
-                    CollisionsHelper::ProcessBoxToBoxCollision(shape, *otherRect, dynamicCollider.collisionInfoVec, emptyCollisionsVec);
-                    break;
-                }
-            case CollisionShape::ShapeType::TRIANGLE:
-                break;
-            default:
-                break;
-            }
-            break;
-        }
-        case CollisionShape::ShapeType::TRIANGLE:
-            break;
-        default:
-            throw std::invalid_argument("Invalid collision shape");
-    }
+    static CollisionDispatcher dispatcher;
+    dispatcher.Dispatch(dynamicCollider, dynamicCollider.collider, staticCollider);
 }
