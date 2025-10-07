@@ -11,6 +11,8 @@ void diji::PhysicsWorld::Reset()
 {
     m_DynamicColliders = std::vector<Collider*>();
     m_StaticInfos = std::vector<StaticColliderInfo>();
+    m_ActiveTriggers = std::vector<TriggerPair>();
+    m_PreviousFrameTriggers = std::vector<TriggerPair>();
 }
 
 void diji::PhysicsWorld::AddCollider(Collider* collider)

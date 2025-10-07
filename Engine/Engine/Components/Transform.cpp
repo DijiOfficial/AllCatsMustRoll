@@ -1,5 +1,20 @@
 ﻿#include "Transform.h"
+
+#include "../Collision/Collider.h"
 #include "../Core/GameObject.h"
+
+void diji::Transform::Init()
+{
+    m_ColliderCompPtr = GetOwner()->GetComponent<Collider>();
+}
+
+void diji::Transform::SetPosition(const sf::Vector2f pos)
+{
+    m_Position = pos;
+
+    if (m_ColliderCompPtr)
+        m_ColliderCompPtr->SetNewPosition(m_Position);
+}
 
 void diji::Transform::Seek(const float speed)
 {

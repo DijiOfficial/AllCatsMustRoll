@@ -22,7 +22,7 @@ namespace diji
 		Transform& operator=(const Transform& other) = delete;
 		Transform& operator=(Transform&& other) = delete;
 
-		void Init() override {}
+		void Init() override;
 		void OnEnable() override {}
 		void Start() override {}
 		
@@ -35,7 +35,7 @@ namespace diji
 
 		[[nodiscard]] sf::Vector2f GetPosition() const { return m_Position; }
 		void SetPosition(const float x, const float y) { m_Position.x = x; m_Position.y = y; }
-		void SetPosition(const sf::Vector2f pos) { m_Position = pos; }
+		void SetPosition(const sf::Vector2f pos);
 		void AddOffset(const float  x, const float y) { m_Position.x += x; m_Position.y += y; }
 		void AddOffset(const sf::Vector2f& offset) { m_Position.x += offset.x; m_Position.y += offset.y; }
 
@@ -51,7 +51,8 @@ namespace diji
 	private:
 		sf::Vector2f m_Position;
 
-		// also separate 
+		// also separate
+		Collider* m_ColliderCompPtr = nullptr;
 		Transform* m_Target = nullptr;
 		TimeSingleton& m_TimeSingleton = TimeSingleton::GetInstance();
 

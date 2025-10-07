@@ -6,11 +6,6 @@
 #include "Engine/Components/Transform.h"
 #include "Engine/Interfaces/ISoundSystem.h"
 
-//temp
-// #include "../Core/GameLoader.h"
-// #include "Engine/Components/TextureComp.h"
-// #include "Engine/Core/GameObject.h"
-
 thomasWasLate::PlayerCharacter::PlayerCharacter(diji::GameObject* ownerPtr, const CurrentPlayer currPlayer, const float jumpTime)
     : Component{ ownerPtr }
     , m_CurrentCharacter{ currPlayer }
@@ -35,119 +30,44 @@ void thomasWasLate::PlayerCharacter::Start()
     SetCameraFollow();
 }
 
-void thomasWasLate::PlayerCharacter::Update()
+void thomasWasLate::PlayerCharacter::OnTriggerEnter(const diji::Collider* other)
 {
-    // if (isLevelDone)
-    // {
-    //     GameManager::GetInstance().SetLevelCleared();
-    // }
-}
+    diji::ISoundSystem& soundSystem = diji::ServiceLocator::GetSoundSystem();
+    const std::string& tag = other->GetTag();
+    
+    //Make those sound effect parameters
+    std::string audioFile;          //Make audio file string
+    constexpr bool isMusic = false; // Its a sound effect so its false
+    int volume;                     // 0-100 volume
+    
+    if (tag == "lava")
+    {
+        volume = 20;
+        audioFile = "sound/lavaouch.wav"; //Location of file
+        soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
+        m_TransformCompPtr->SetPosition(m_SpawnPoint); // todo: respawn system resetting velocity and shit
+    }
 
-void thomasWasLate::PlayerCharacter::FixedUpdate()
-{
-    // diji::Rectf newCollisionBox = m_ColliderCompPtr->GetCollisionBox();
-    // newCollisionBox.bottom += GRAVITY * diji::TimeSingleton::GetInstance().GetFixedUpdateDeltaTime();
-    //
-    // // check for collision with world
-    // if (diji::CollisionSingleton::GetInstance().IsCollidingWithWorld(newCollisionBox))
-    // {
-    //     if (m_IsOnGround)
-    //         return;
-    //     
-    //     m_IsOnGround = true;
-    //     m_JumpTime = 0.0f;
-    //
-    //     // Snap to ground
-    //     m_TransformCompPtr->SetPosition(m_TransformCompPtr->GetPosition().x, std::round((newCollisionBox.bottom - m_ColliderCompPtr->GetOffset().y) / 50) * 50 - 1.f);
-    //     
-    //     return;
-    // }
-    //
-    // if (!m_IsJumping)
-    //     m_IsOnGround = false;
-    //
-    // // Check Player Collision and Others
-    // const auto& colliders = diji::CollisionSingleton::GetInstance().IsColliding(m_ColliderCompPtr, newCollisionBox);
-    // for (const auto& collider : colliders)
-    // {
-    //     //Get dat sound system interface
-    //     diji::ISoundSystem& soundSystem = diji::ServiceLocator::GetSoundSystem();
-    //
-    //     //Make those sound effect parameters
-    //     std::string audioFile; //Make audio file string
-    //     const bool isMusic = false; // Its a sound effect so its false
-    //     int volume;      // 0-100 volume
-    //     
-    //     // other collision
-    //     if (!collider->GetParent())
-    //     {
-    //         const auto& tag = collider->GetTag();
-    //         
-    //         if (tag == "water" || tag == "lava")
-    //         {
-    //            
-    //             
-    //             
-    //
-    //             if(tag == "water")
-    //             {
-    //                 volume = 7;
-    //                 audioFile = "sound/waterouch.wav"; //Location of file
-    //                 soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
-    //             }
-    //             else 
-    //             {
-    //                 volume = 20;
-    //                 audioFile = "sound/lavaouch.wav"; //Location of file
-    //                 soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
-    //             }
-    //
-    //             
-    //
-    //             
-    //             m_TransformCompPtr->SetPosition(m_SpawnPoint);
-    //         }
-    //
-    //         if (tag == "void")
-    //         {
-    //             
-    //             volume = 25;
-    //             audioFile = "sound/bruh.wav"; //Location of file
-    //             soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
-    //
-    //             m_TransformCompPtr->SetPosition(m_SpawnPoint);
-    //         }
-    //         
-    //         
-    //
-    //         return;
-    //     }
-    //
-    //     if (m_IsJumping)
-    //         break;
-    //     
-    //     // player collision
-    //     if (collider->GetParent()->HasComponent<PlayerCharacter>())
-    //     {
-    //         const auto otherBox = collider->GetCollisionBox();
-    //
-    //         // only snap if we are above the other player
-    //         const float myBottomEdge = newCollisionBox.bottom + newCollisionBox.height;
-    //         const float otherTopEdge = otherBox.bottom + 5;
-    //         if (myBottomEdge > otherTopEdge)
-    //             break;
-    //         
-    //         m_IsOnGround = true;
-    //         m_JumpTime = 0.0f;
-    //
-    //         // Snap to player head
-    //         m_TransformCompPtr->SetPosition(m_TransformCompPtr->GetPosition().x, otherBox.bottom - newCollisionBox.height - m_ColliderCompPtr->GetOffset().y - 1.f);
-    //
-    //         return;
-    //     }
-    // }
-    //
-    // m_TransformCompPtr->AddOffset(0.f, GRAVITY * diji::TimeSingleton::GetInstance().GetFixedUpdateDeltaTime());
+    if (tag == "water")
+    {
+        volume = 7;
+        audioFile = "sound/waterouch.wav"; //Location of file
+        soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
+        m_TransformCompPtr->SetPosition(m_SpawnPoint);
+    }
+
+    if (tag == "goal")
+    {
+        GameManager::GetInstance().SetLevelCleared();
+    }
+
+    if (tag == "void")
+    {
+        volume = 25;
+        audioFile = "sound/bruh.wav"; //Location of file
+        soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
+        m_TransformCompPtr->SetPosition(m_SpawnPoint);
+    }
 }
 
 void thomasWasLate::PlayerCharacter::RefreshView(const bool isSplitscreen) const

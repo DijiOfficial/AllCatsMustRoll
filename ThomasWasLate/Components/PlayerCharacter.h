@@ -24,12 +24,14 @@ namespace thomasWasLate
         void OnEnable() override {}
         void Start() override;
         
-        void Update() override;
-        void FixedUpdate() override;
+        void Update() override {}
+        void FixedUpdate() override {}
         void LateUpdate() override {}
 
         void OnDisable() override {}
         void OnDestroy() override {}
+
+        void OnTriggerEnter(const diji::Collider* other) override;
 
         void RefreshView(bool isSplitscreen) const;
         void Move(const sf::Vector2f& direction) const;
