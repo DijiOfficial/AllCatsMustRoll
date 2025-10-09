@@ -46,14 +46,14 @@ void SceneLoader::Level()
 
     const auto staticBackground = scene->CreateGameObject("A_StaticBackground");
     staticBackground->AddComponents<Transform>(static_cast<float>(window::VIEWPORT.x) * 0.5f, static_cast<float>(window::VIEWPORT.y) * 0.5f);
-    staticBackground->AddComponents<TextureComp>("graphics/background - Copy.png");
+    staticBackground->AddComponents<TextureComp>("graphics/background1.jpg");
     // staticBackground->AddComponents<TextureComp>("graphics/sky.png");
     staticBackground->AddComponents<Render>();
     scene->SetGameObjectAsStaticBackground(staticBackground);
 
     const auto background = scene->CreateGameObject("B_Background");
     background->AddComponents<Transform>(0, 0);
-    background->AddComponents<Sprite>("graphics/tiles_sheet.png");
+    background->AddComponents<Sprite>("graphics/tiles1.png");
     background->AddComponents<Render>();
     background->AddComponents<thomasWasLate::BackgroundHandler>();
     
@@ -86,8 +86,8 @@ void SceneLoader::Level()
     jim->AddComponents<Render>();
     jim->AddComponents<Collider>(CollisionShape::ShapeType::CIRCLE, 25.f);
     // jim->AddComponents<Collider>(CollisionShape::ShapeType::RECT, sf::Vector2f{50, 50});
-    jim->GetComponent<Collider>()->SetRestitution(0.4f);
-    jim->GetComponent<Collider>()->SetFriction(0.2f);
+    jim->GetComponent<Collider>()->SetRestitution(0.4f);//0.4 is default value
+    jim->GetComponent<Collider>()->SetFriction(0.2f);//0.2f is default value
     // jim->GetComponent<Collider>()->SetAffectedByGravity(false);
     jim->AddComponents<thomasWasLate::PlayerCharacter>(thomasWasLate::CurrentPlayer::Jim, 0.25f);
     jim->AddComponents<ShapeRender>(true);

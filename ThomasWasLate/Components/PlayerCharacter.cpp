@@ -53,12 +53,17 @@ void thomasWasLate::PlayerCharacter::OnTriggerEnter(const diji::Collider* other)
         volume = 7;
         audioFile = "sound/waterouch.wav"; //Location of file
         soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
-        m_TransformCompPtr->SetPosition(m_SpawnPoint);
+       m_TransformCompPtr->SetPosition(m_SpawnPoint);
+        //m_ColliderCompPtr->SetFriction(0.2);//0.2f is default value
+       
     }
 
     if (tag == "goal")
     {
         GameManager::GetInstance().SetLevelCleared();
+        volume = 100;
+        audioFile = "sound/finishlevelnya.wav"; //Location of file
+        soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
     }
 
     if (tag == "void")

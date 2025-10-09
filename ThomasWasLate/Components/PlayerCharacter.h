@@ -40,7 +40,7 @@ namespace thomasWasLate
         void ClearJump();
 
     protected:
-        float m_Speed = 400.f;
+        float m_Speed = 400.f;//Orignal was 400
     private:
         diji::Transform* m_TransformCompPtr = nullptr;
         diji::Camera* m_CameraCompPtr = nullptr;

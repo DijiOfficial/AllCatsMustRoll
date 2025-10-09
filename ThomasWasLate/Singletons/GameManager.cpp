@@ -45,7 +45,7 @@ std::string thomasWasLate::GameManager::LoadInformation()
     {
     case 1:
         m_StartPosition.x = 225;//Changed spawn point for level 1, as level design was changed
-        m_StartPosition.y = -100.f;
+        m_StartPosition.y = 0.f;
         m_LevelTimeLimit = 30.0f;
         break;
     case 2:
