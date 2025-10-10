@@ -19,11 +19,12 @@ namespace thomasWasLate
     //struct for each level
     struct LevelConfig
     {
-        //Every level has a different text file, background, tileset, music and start position
+        //Every level has a different text file, background, tileset, music, volume and start position
         std::string levelText;
         std::string backgroundImg;
         std::string tilesetImg;
         std::string backgroundMusic;
+        int musicVol;
         sf::Vector2f startPos;
 
     };
@@ -69,6 +70,14 @@ namespace thomasWasLate
             return m_LevelConfigs.at(m_CurrentLevel - 1).backgroundMusic;
         }
 
+        //Get the path to the volume value
+        [[nodiscard]] const int GetVolume() const
+        {
+
+            // -1 is used becuase a vector starts at 0
+            return m_LevelConfigs.at(m_CurrentLevel - 1).musicVol;
+        }
+
     private:
         // std::vector<std::unique_ptr<diji::Collider>> m_TileColliders;
         CurrentPlayer m_CurrentPlayer = CurrentPlayer::Jim;
@@ -86,23 +95,26 @@ namespace thomasWasLate
                 .levelText = "Resources/levels/level1.txt",
                 .backgroundImg = "graphics/background1.jpg",
                 .tilesetImg = "graphics/tiles1.png",
-                .backgroundMusic = "sound/background1.wav",
+                .backgroundMusic = "sound/background1.mp3",
+                .musicVol = 100,
                 .startPos = {225, 0}
            },
-           
+
             {// Level 2
                 .levelText = "Resources/levels/level2.txt",
                 .backgroundImg = "graphics/background2.jpg",
                 .tilesetImg = "graphics/tiles2.png",
                 .backgroundMusic = "sound/background2.wav",
+                .musicVol = 100,
                 .startPos = {225, 0}
             },
-            
+
             {// Level 3
                 .levelText = "Resources/levels/level3.txt",
                 .backgroundImg = "graphics/background3.jpg",
                 .tilesetImg = "graphics/tiles3.png",
-                .backgroundMusic = "sound/background3.mp3",
+                .backgroundMusic = "sound/background3.wav",
+                .musicVol = 75,
                 .startPos = {225, 0}
             },
             
@@ -110,7 +122,8 @@ namespace thomasWasLate
                 .levelText = "Resources/levels/level4.txt",
                 .backgroundImg = "graphics/background4.jpg",
                 .tilesetImg = "graphics/tiles4.png",
-                .backgroundMusic = "sound/background4.mp3",
+                .backgroundMusic = "sound/background4.wav",
+                .musicVol = 50,
                 .startPos = {225, 0}
             }
             // Extra levels can easily be added here

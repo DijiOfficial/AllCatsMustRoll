@@ -9,37 +9,39 @@ namespace diji
 {
 	std::unique_ptr<ISoundSystem> ServiceLocator::_ss_instance{ std::make_unique<NullSoundSystem>() };
 
-	void SFMLISoundSystem::PlayAudio(const std::string& audio, const bool isMusic, const int volume) const
+	void SFMLISoundSystem::PlayAudio(const std::string& audio, bool isMusic, int volume) 
 	{
-
 		if (audio == "invalid")
 			return;
 
-		
-
-		auto& soundEffect = ResourceManager::GetInstance().LoadSoundEffect(audio);
-
 		if (isMusic)
 		{
-			//Music now loops
-			soundEffect.setLooping(true);
+			// Check if the music is already playing
+			if (!m_LastMusicPlayed.empty() && m_LastMusicPlayed != audio)
+			{
+				auto* oldMusic = ResourceManager::GetInstance().LoadMusic(m_LastMusicPlayed);
+				if (oldMusic)
+					oldMusic->stop(); // Stop the old music from playing
+			}
 
-			/*Music* music = nullptr;
-			music = ResourceManager::GetInstance().LoadMusic(audio);
+			auto* music = ResourceManager::GetInstance().LoadMusic(audio);
 			m_LastMusicPlayed = audio;
+
 			if (music)
 			{
-				music->Play(true);
-			 	music->SetVolume(volume);
-			 }
-			return;*/
+				music->setLooping(true);
+				music->setVolume(static_cast<float>(volume));
+				music->play();
+			}
+
+			return;
 		}
 
-       
-		
-        soundEffect.setVolume(static_cast<float>(volume));
-        soundEffect.play();
+		auto& soundEffect = ResourceManager::GetInstance().LoadSoundEffect(audio);
+		soundEffect.setVolume(static_cast<float>(volume));
+		soundEffect.play();
 	}
+
 
 	SFMLISoundSystem::SFMLISoundSystem()
 	{

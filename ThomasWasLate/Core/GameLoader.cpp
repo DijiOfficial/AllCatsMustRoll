@@ -47,10 +47,11 @@ void SceneLoader::Level()
     thomasWasLate::GameManager& gameManager = thomasWasLate::GameManager::GetInstance();
     
 
-    // Get the paths to the background, tiles and background music
+    // Get the paths to the background, tiles, background music and volume
     const std::string& backgroundPath = gameManager.GetBackgroundPath();
     const std::string& tilesetPath = gameManager.GetTilesetPath();
     const std::string& musicPath = gameManager.GetBackgroundMusicPath();
+    const int volume = gameManager.GetVolume();
 
     SceneManager::GetInstance().SetActiveScene(static_cast<int>(thomasWasLate::thomasWasLateState::Level));
     const auto& scene = SceneManager::GetInstance().CreateScene(static_cast<int>(thomasWasLate::thomasWasLateState::Level));
@@ -95,10 +96,6 @@ void SceneLoader::Level()
 
     // Make the background music
     const bool isMusic = true;
-    const int volume = 100;
-
-    //soundSystem.Pause();
-    /*TODO: STOP THE PREVIOUS LEVEL'S MUSIC FROM PLAYING WHEN A NEW LEVEL STARTS*/
 
     soundSystem.AddSoundRequest(musicPath, isMusic, volume);// Play the background music
 

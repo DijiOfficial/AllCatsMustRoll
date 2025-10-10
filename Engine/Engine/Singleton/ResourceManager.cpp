@@ -73,3 +73,19 @@ sf::Sound& diji::ResourceManager::LoadSoundEffect(const std::string& file)
 	// Store and return the sound
 	return m_SoundEffectsUMap.emplace(fullPath, std::move(sound)).first->second;
 }
+
+sf::Music* diji::ResourceManager::LoadMusic(const std::string& file)
+{
+	const auto fullPath = m_DataPath + file;
+	auto it = m_MusicUMap.find(fullPath);
+	if (it != m_MusicUMap.end())
+		return it->second.get();
+
+	auto music = std::make_unique<sf::Music>();
+	if (!music->openFromFile(fullPath))
+		throw std::runtime_error("Failed to load music: " + fullPath);
+
+	auto* musicPtr = music.get();
+	m_MusicUMap.emplace(fullPath, std::move(music));
+	return musicPtr;
+}

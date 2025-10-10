@@ -42,7 +42,7 @@ namespace thomasWasLate
         
 
     protected:
-        float m_Speed = 2000.f;//Orignal was 400
+        float m_Speed = 1000.f;//Orignal was 400
     private:
         diji::Transform* m_TransformCompPtr = nullptr;
         diji::Camera* m_CameraCompPtr = nullptr;

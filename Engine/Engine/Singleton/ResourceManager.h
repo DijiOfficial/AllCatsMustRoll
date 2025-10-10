@@ -7,6 +7,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio/Music.hpp>
 
 namespace sf
 {
@@ -22,7 +23,10 @@ namespace diji
         [[nodiscard]] sf::Texture& LoadTexture(const std::string& file);
         [[nodiscard]] sf::Font& LoadFont(const std::string& file);
         [[nodiscard]] sf::Sound& LoadSoundEffect(const std::string& file);
-        // Music* LoadMusic(const std::string& file);
+        
+        // Added music functionality
+        std::unordered_map<std::string, std::unique_ptr<sf::Music>> m_MusicUMap;
+        sf::Music* LoadMusic(const std::string& file);
 
     private:
         std::string m_DataPath;

@@ -46,7 +46,7 @@ void thomasWasLate::PlayerCharacter::OnTriggerEnter(const diji::Collider* other)
     
     if (tag == "lava")
     {
-        volume = 20;
+        volume = 40;
         audioFile = "sound/lavaouch.wav"; //Location of file
         soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
         m_TransformCompPtr->SetPosition(m_SpawnPoint); // todo: respawn system resetting velocity and shit
@@ -54,7 +54,7 @@ void thomasWasLate::PlayerCharacter::OnTriggerEnter(const diji::Collider* other)
 
     if (tag == "water")
     {
-        volume = 7;
+        volume = 35;
         audioFile = "sound/waterouch.wav"; //Location of file
         soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
        m_TransformCompPtr->SetPosition(m_SpawnPoint);

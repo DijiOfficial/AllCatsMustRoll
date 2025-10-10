@@ -48,7 +48,7 @@ namespace diji
 		void Resume() override;
 		
 	private:
-		void PlayAudio(const std::string& audio, bool isMusic, int volume) const;
+		void PlayAudio(const std::string& audio, bool isMusic, int volume);
 		std::pair<std::pair<bool, int>, std::string>  GetNextSoundRequest();
 	
 		void ProcessSounds();
