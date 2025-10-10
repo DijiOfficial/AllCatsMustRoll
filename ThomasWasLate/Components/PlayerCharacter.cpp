@@ -18,6 +18,10 @@ void thomasWasLate::PlayerCharacter::Init()
     m_TransformCompPtr = GetOwner()->GetComponent<diji::Transform>();
     m_ColliderCompPtr = GetOwner()->GetComponent<diji::Collider>();
 
+
+   
+    
+
     GameManager::GetInstance().OnPlayerSwitchedEvent.AddListener(this, &PlayerCharacter::RefreshView);
     GameManager::GetInstance().OnNewLevelLoadedEvent.AddListener(this, &PlayerCharacter::OnNewLevelLoaded);
 
@@ -60,10 +64,16 @@ void thomasWasLate::PlayerCharacter::OnTriggerEnter(const diji::Collider* other)
 
     if (tag == "goal")
     {
-        GameManager::GetInstance().SetLevelCleared();
-        volume = 100;
-        audioFile = "sound/finishlevelnya.wav"; //Location of file
-        soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
+        // level cleared boolean prevents multiple execution (levels were being skipped on completion)
+        if (!m_IsLevelCleared)
+        {
+            m_IsLevelCleared = true;
+
+            GameManager::GetInstance().SetLevelCleared();
+            volume = 100;
+            audioFile = "sound/finishlevelnya.wav"; //Location of file
+            soundSystem.AddSoundRequest(audioFile, isMusic, volume); //Send a request to play dat sound
+        }
     }
 
     if (tag == "void")
@@ -117,6 +127,11 @@ void thomasWasLate::PlayerCharacter::OnNewLevelLoaded()
 
     m_SpawnPoint = m_TransformCompPtr->GetPosition();
 }
+
+
+
+
+
 
 void thomasWasLate::PlayerCharacter::CheckForBoosting()
 {

@@ -13,6 +13,8 @@ namespace diji
 		virtual void AddSoundRequest(const std::string& audio, bool isMusic, int volume = 100) = 0;
 		virtual void Pause() = 0;
 		virtual void Resume() = 0;
+
+		
 	};
 
 	class NullSoundSystem final : public ISoundSystem
@@ -21,6 +23,7 @@ namespace diji
 		void AddSoundRequest(const std::string& audio, bool isMusic, int volume = 100) override;
 		void Pause() override {}
 		void Resume() override {}
+
 	};
 
 	class ServiceLocator final
@@ -43,6 +46,7 @@ namespace diji
 		void AddSoundRequest(const std::string& audio, bool isMusic, int volume = 100) override;
 		void Pause() override;
 		void Resume() override;
+		
 	private:
 		void PlayAudio(const std::string& audio, bool isMusic, int volume) const;
 		std::pair<std::pair<bool, int>, std::string>  GetNextSoundRequest();

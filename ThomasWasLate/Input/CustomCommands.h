@@ -58,10 +58,10 @@ namespace thomasWasLate
     class RotateCharacter final : public diji::GameActorCommands
     {
     public:
-        explicit RotateCharacter(diji::GameObject* actor, const sf::Vector2f& direction);
+        //explicit RotateCharacter(diji::GameObject* actor, const sf::Vector2f& direction);
         ~RotateCharacter() noexcept override = default;
 
-        void Execute() override;
+        //void Execute() override;
 
     private:
         const sf::Vector2f m_Direction;

@@ -39,8 +39,10 @@ namespace thomasWasLate
         void Jump(bool ignoreTimer = false);
         void ClearJump();
 
+        
+
     protected:
-        float m_Speed = 400.f;//Orignal was 400
+        float m_Speed = 2000.f;//Orignal was 400
     private:
         diji::Transform* m_TransformCompPtr = nullptr;
         diji::Camera* m_CameraCompPtr = nullptr;
@@ -61,5 +63,8 @@ namespace thomasWasLate
         void OnNewLevelLoaded();
 
         void CheckForBoosting();
+
+        // Check if the player has beaten the level (to prevent goal collision being executed twice in a row)
+        bool m_IsLevelCleared = false;
     };
 }

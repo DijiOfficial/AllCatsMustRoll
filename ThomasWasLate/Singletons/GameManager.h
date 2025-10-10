@@ -4,20 +4,35 @@
 
 #include <string>
 #include <SFML/System/Vector2.hpp>
+#include <stdexcept>
+#include <iostream>
+
 
 namespace thomasWasLate
 {
     enum class CurrentPlayer
     {
         Jim = 0,
-       John
+        John
     };
-    
+
+    //struct for each level
+    struct LevelConfig
+    {
+        //Every level has a different text file, background, tileset, music and start position
+        std::string levelText;
+        std::string backgroundImg;
+        std::string tilesetImg;
+        std::string backgroundMusic;
+        sf::Vector2f startPos;
+
+    };
+
     class GameManager final : public diji::Singleton<GameManager>
     {
     public:
         [[nodiscard]] CurrentPlayer GetCurrentPlayer() const { return m_CurrentPlayer; }
-        void SwitchPlayer();
+        //void SwitchPlayer();
 
         diji::Event<> OnPlayerSwitchedEvent;
         diji::Event<> OnNewLevelLoadedEvent;
@@ -29,12 +44,80 @@ namespace thomasWasLate
         [[nodiscard]] int GetRows() const { return m_Rows; }
         [[nodiscard]] int GetCols() const { return m_Cols; }
         void SetLevelCleared();
-    
+
+
+        //Get the path to the background file
+        [[nodiscard]] const std::string& GetBackgroundPath() const
+        {
+            // -1 is used becuase a vector starts at 0
+            return m_LevelConfigs.at(m_CurrentLevel - 1).backgroundImg;
+        }
+
+        //Get the path to the tileset file
+        [[nodiscard]] const std::string& GetTilesetPath() const
+        {
+            
+            // -1 is used becuase a vector starts at 0
+            return m_LevelConfigs.at(m_CurrentLevel - 1).tilesetImg;
+        }
+
+        //Get the path to the background music file
+        [[nodiscard]] const std::string& GetBackgroundMusicPath() const
+        {
+
+            // -1 is used becuase a vector starts at 0
+            return m_LevelConfigs.at(m_CurrentLevel - 1).backgroundMusic;
+        }
+
     private:
         // std::vector<std::unique_ptr<diji::Collider>> m_TileColliders;
         CurrentPlayer m_CurrentPlayer = CurrentPlayer::Jim;
         sf::Vector2f m_StartPosition;
         std::vector<int> m_LevelInfo;
+
+
+        
+
+        //A vector (list) of every level config
+        std::vector<LevelConfig> m_LevelConfigs =
+        {
+
+           {// Level 1
+                .levelText = "Resources/levels/level1.txt",
+                .backgroundImg = "graphics/background1.jpg",
+                .tilesetImg = "graphics/tiles1.png",
+                .backgroundMusic = "sound/background1.wav",
+                .startPos = {225, 0}
+           },
+           
+            {// Level 2
+                .levelText = "Resources/levels/level2.txt",
+                .backgroundImg = "graphics/background2.jpg",
+                .tilesetImg = "graphics/tiles2.png",
+                .backgroundMusic = "sound/background2.wav",
+                .startPos = {225, 0}
+            },
+            
+            {// Level 3
+                .levelText = "Resources/levels/level3.txt",
+                .backgroundImg = "graphics/background3.jpg",
+                .tilesetImg = "graphics/tiles3.png",
+                .backgroundMusic = "sound/background3.mp3",
+                .startPos = {225, 0}
+            },
+            
+            {// Level 4
+                .levelText = "Resources/levels/level4.txt",
+                .backgroundImg = "graphics/background4.jpg",
+                .tilesetImg = "graphics/tiles4.png",
+                .backgroundMusic = "sound/background4.mp3",
+                .startPos = {225, 0}
+            }
+            // Extra levels can easily be added here
+        };
+
+
+
         int m_CurrentLevel = 1;
         int m_Rows = 0;
         int m_Cols = 0;

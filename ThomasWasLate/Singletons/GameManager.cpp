@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <string>
 
+
 #include "../Core/GameState.h"
 // #include "Engine/Collision/CollisionSingleton.h"
 #include "Engine/Collision/Collider.h"
@@ -13,6 +14,7 @@
 #include "Engine/Singleton/GameStateManager.h"
 #include "Engine/Singleton/SceneManager.h"
 #include "Engine/Components/Transform.h"
+#include <iostream>
 
 /*void thomasWasLate::GameManager::SwitchPlayer()
 {
@@ -27,54 +29,62 @@ void thomasWasLate::GameManager::LoadLevel()
 
     CreateWorldCollision();
 
-    OnNewLevelLoadedEvent.Broadcast();
+   OnNewLevelLoadedEvent.Broadcast();
 }
 
 void thomasWasLate::GameManager::SetLevelCleared()
 {
-    ++m_CurrentLevel;
+    // Go to the next level if there is one 
+    if (m_CurrentLevel < m_LevelConfigs.size())
+    {
+        ++m_CurrentLevel;
+    }
+    else // When all levels are done
+    {
+        
+        // todo: game finish screen
+        std::cout << "GAME IS FINISHED"<< std::endl;
+    }
+    
 
     OnNewLevelLoadedEvent.ClearListeners();
     OnPlayerSwitchedEvent.ClearListeners();
     diji::SceneManager::GetInstance().SetNextSceneToActivate(static_cast<int>(thomasWasLateState::Level));
+    std::cout << "LEVEL" << m_CurrentLevel << " LOADED" << std::endl;
 }
+
+
 
 std::string thomasWasLate::GameManager::LoadInformation()
 {
-    switch (m_CurrentLevel) // if you're going to read from a file put this information in the fucking file
-    {
-    case 1:
-        m_StartPosition.x = 225;//Changed spawn point for level 1, as level design was changed
-        m_StartPosition.y = 0.f;
-        m_LevelTimeLimit = 30.0f;
-        break;
-    case 2:
-        m_StartPosition.x = 100;
-        m_StartPosition.y = 3600;
-        m_LevelTimeLimit = 100.0f;
-        break;
-    case 3:
-        m_StartPosition.x = 1250;
-        m_StartPosition.y = 0;
-        m_LevelTimeLimit = 30.0f;
-        break;
-    case 4:
-        m_StartPosition.x = 50;
-        m_StartPosition.y = 200;
-        m_LevelTimeLimit = 50.0f;
-        break;
-    default:
-        throw std::runtime_error("Invalid Level.");
-    }
+    
+   // Check if the current level is valid (unlikley it is invalid but, better safe than sorry ig)
+   if (m_CurrentLevel <= 0 || m_CurrentLevel > m_LevelConfigs.size())
+   {
+       throw std::runtime_error("Invalid current level index.");
+       
+   }
+   
+   // Get the starting position for the jim (player)
+   const auto& currentPos = m_LevelConfigs.at(m_CurrentLevel - 1);
+   m_StartPosition = currentPos.startPos;
 
-    return std::format("../ThomasWasLate/Resources/levels/level{}.txt", m_CurrentLevel);
+    // Return the level text file of the current level (if the game hasn't been beaten yet)
+    return m_LevelConfigs.at(m_CurrentLevel - 1).levelText;
+    
 }
 
 void thomasWasLate::GameManager::ReadLevelInfo(const std::string& filepath)
 {
     std::ifstream file(filepath);
     if (!file.is_open())
+    {
+        // Extra error details becuase runtime errors are slayy
+        std::cerr << "Failed to open file: " << filepath << "\n";
+        std::cerr << "Absolute path: " << std::filesystem::absolute(filepath) << "\n";
         throw std::runtime_error("Could not open level file: " + filepath);
+    }
+        
 
     std::string line;
     m_Rows = 0;
@@ -208,4 +218,6 @@ void thomasWasLate::GameManager::CreateWorldCollision() const
             (void)diji::SceneManager::GetInstance().SpawnGameObject("WorldCollider", std::move(tempBound), center);
         }
     }
+
+   
 }

@@ -15,6 +15,8 @@ namespace diji
 		if (audio == "invalid")
 			return;
 
+		
+
 		auto& soundEffect = ResourceManager::GetInstance().LoadSoundEffect(audio);
 
 		if (isMusic)
